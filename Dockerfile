@@ -1,4 +1,4 @@
-# Dockerfile para producción - Versión final
+# Dockerfile para producción - Con curl para healthcheck
 FROM node:18-alpine AS builder
 
 WORKDIR /app
@@ -17,6 +17,9 @@ RUN npm run build
 
 # Etapa de producción con Nginx
 FROM nginx:alpine
+
+# Instalar curl para healthchecks
+RUN apk add --no-cache curl
 
 # Copiar archivos construidos
 COPY --from=builder /app/dist /usr/share/nginx/html
