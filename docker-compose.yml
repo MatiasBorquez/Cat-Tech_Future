@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  cat-tech-future:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cat-tech-future
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    labels:
+      - "coolify.managed=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.cat-tech-future.rule=Host(`tu-dominio.com`)"
+      - "traefik.http.routers.cat-tech-future.entrypoints=websecure"
+      - "traefik.http.routers.cat-tech-future.tls.certresolver=letsencrypt"
+      - "traefik.http.services.cat-tech-future.loadbalancer.server.port=80"

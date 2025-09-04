@@ -1,27 +1,32 @@
+# Dockerfile para producción
+FROM node:18-alpine AS builder
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+
+# Instalar dependencias
+RUN npm ci --only=production
+
+# Copiar el código fuente
+COPY . .
+
+# Construir la aplicación
+RUN npm run build
+
+# Etapa de producción con Nginx
 FROM nginx:alpine
 
-# Copia tu archivo HTML principal y assets
-COPY *.html /usr/share/nginx/html/
-COPY *.css /usr/share/nginx/html/
-COPY *.js /usr/share/nginx/html/
+# Copiar archivos construidos
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Si tienes carpetas adicionales (imágenes, etc.)
-# COPY assets/ /usr/share/nginx/html/assets/
-# COPY images/ /usr/share/nginx/html/images/
+# Copiar configuración de Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Configuración de Nginx para SPA (opcional)
-COPY <<EOF /etc/nginx/conf.d/default.conf
-server {
-    listen 80;
-    server_name localhost;
-    root /usr/share/nginx/html;
-    index index.html;
-    
-    location / {
-        try_files \$uri \$uri/ /index.html;
-    }
-}
-EOF
-
+# Exponer puerto 80
 EXPOSE 80
+
+# Comando para iniciar Nginx
 CMD ["nginx", "-g", "daemon off;"]
