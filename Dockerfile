@@ -1,34 +1,21 @@
-# Dockerfile para producción - Con curl para healthcheck
+# Dockerfile para producción - Sin healthcheck
 FROM node:18-alpine AS builder
 
 WORKDIR /app
-
-# Copiar archivos de dependencias
 COPY package*.json ./
-
-# Instalar todas las dependencias
 RUN npm ci
-
-# Copiar el código fuente
 COPY . .
-
-# Construir la aplicación
 RUN npm run build
 
-# Etapa de producción con Nginx
+# Etapa de producción
 FROM nginx:alpine
-
-# Instalar curl para healthchecks
-RUN apk add --no-cache curl
 
 # Copiar archivos construidos
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copiar configuración de Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Exponer puerto 80
-EXPOSE 80
+# Deshabilitar healthcheck explícitamente
+HEALTHCHECK NONE
 
-# Comando para iniciar Nginx
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
