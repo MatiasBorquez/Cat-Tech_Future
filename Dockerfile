@@ -1,4 +1,4 @@
-# Dockerfile para producción - Versión simplificada
+# Dockerfile para producción - Sin healthcheck
 FROM node:18-alpine AS builder
 
 # Establecer directorio de trabajo
@@ -27,6 +27,9 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Copiar configuración de Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Deshabilitar healthcheck explícitamente
+HEALTHCHECK NONE
 
 # Exponer puerto 80
 EXPOSE 80
