@@ -7,10 +7,10 @@ const App = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Initialize theme and language from localStorage
+  // Initialize theme and language
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    const savedLang = localStorage.getItem('language') || 'es';
+    const savedTheme = window.localStorage?.getItem('theme') || 'light';
+    const savedLang = window.localStorage?.getItem('language') || 'es';
     
     setCurrentTheme(savedTheme);
     setCurrentLang(savedLang);
@@ -32,13 +32,17 @@ const App = () => {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     setCurrentTheme(newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
+    if (window.localStorage) {
+      window.localStorage.setItem('theme', newTheme);
+    }
   };
 
   const toggleLanguage = () => {
     const newLang = currentLang === 'es' ? 'en' : 'es';
     setCurrentLang(newLang);
-    localStorage.setItem('language', newLang);
+    if (window.localStorage) {
+      window.localStorage.setItem('language', newLang);
+    }
     document.documentElement.lang = newLang;
   };
 
@@ -92,11 +96,14 @@ const App = () => {
               <a href="#about" onClick={() => setMobileMenuOpen(false)}>
                 {getText("Sobre Nosotros", "About Us")}
               </a>
-              <a href="#projects" onClick={() => setMobileMenuOpen(false)}>
-                {getText("Proyectos", "Projects")}
-              </a>
               <a href="#services" onClick={() => setMobileMenuOpen(false)}>
                 {getText("Servicios", "Services")}
+              </a>
+              <a href="#portfolio" onClick={() => setMobileMenuOpen(false)}>
+                {getText("Portfolio", "Portfolio")}
+              </a>
+              <a href="#technologies" onClick={() => setMobileMenuOpen(false)}>
+                {getText("Tecnologías", "Technologies")}
               </a>
               <a href="#contact" onClick={() => setMobileMenuOpen(false)}>
                 {getText("Contacto", "Contact")}
@@ -113,22 +120,22 @@ const App = () => {
           <div className="hero-content">
             <h1>
               {getText(
-                "Cat-Tech Future: Transformando el Presente, Construyendo el Futuro",
-                "Cat-Tech Future: Transforming the Present, Building the Future"
+                "Soluciones Tecnológicas Integrales para tu Negocio",
+                "Comprehensive Technology Solutions for Your Business"
               )}
             </h1>
             <p>
               {getText(
-                "Innovación en IoT, Análisis de Datos, IA, Automatización y Robótica para el Desarrollo Sostenible",
-                "Innovation in IoT, Data Analysis, AI, Automation and Robotics for Sustainable Development"
+                "Desarrollo de Hardware IoT, Software Personalizado y Análisis de Datos. Transformamos desafíos complejos en soluciones innovadoras.",
+                "IoT Hardware Development, Custom Software and Data Analysis. We transform complex challenges into innovative solutions."
               )}
             </p>
             <div className="hero-buttons">
               <a href="#contact" className="btn btn-primary">
                 {getText("Contáctanos", "Contact Us")}
               </a>
-              <a href="#projects" className="btn btn-outline">
-                {getText("Conoce Nuestros Proyectos", "Discover Our Projects")}
+              <a href="#services" className="btn btn-outline">
+                {getText("Conoce Nuestros Servicios", "Discover Our Services")}
               </a>
             </div>
           </div>
@@ -147,87 +154,41 @@ const App = () => {
           <div className="section-line"></div>
           <div className="about-content">
             <p>{getText(
-              "Somos un equipo apasionado de ingenieros y especialistas en tecnología, comprometidos con impulsar el progreso de nuestra sociedad a través de la innovación.",
-              "We are a passionate team of engineers and technology specialists, committed to driving progress in our society through innovation."
+              "Somos una empresa de desarrollo tecnológico especializada en crear soluciones integrales de hardware y software. Nuestro equipo combina experiencia en ingeniería electrónica, desarrollo de software y ciencia de datos para transformar desafíos complejos en soluciones innovadoras.",
+              "We are a technology development company specialized in creating comprehensive hardware and software solutions. Our team combines experience in electronic engineering, software development and data science to transform complex challenges into innovative solutions."
             )}</p>
             <div className="about-grid">
               <div className="about-card">
-                <div className="card-icon">💡</div>
-                <h3>{getText("Nuestra Visión", "Our Vision")}</h3>
+                <div className="card-icon">🎯</div>
+                <h3>{getText("Nuestro Enfoque", "Our Approach")}</h3>
                 <p>{getText(
-                  "Contribuir al desarrollo tecnológico de nuestra región y del país, generando un impacto positivo en la economía, el medio ambiente y la calidad de vida de las personas.",
-                  "Contribute to the technological development of our region and country, generating a positive impact on the economy, environment and people's quality of life."
+                  "Desarrollamos soluciones end-to-end que integran hardware IoT, software personalizado y análisis de datos para impulsar la transformación digital de tu negocio.",
+                  "We develop end-to-end solutions that integrate IoT hardware, custom software and data analysis to drive your business digital transformation."
                 )}</p>
               </div>
               <div className="about-card">
                 <div className="card-icon">👥</div>
-                <h3>{getText("Nuestro Equipo", "Our Team")}</h3>
+                <h3>{getText("Equipo Experto", "Expert Team")}</h3>
                 <p>{getText(
-                  "Contamos con profesionales especializados en diversas áreas de la tecnología, unidos por la pasión de crear soluciones innovadoras que respondan a necesidades reales.",
-                  "We have professionals specialized in various areas of technology, united by the passion to create innovative solutions that respond to real needs."
+                  "Ingenieros especializados en desarrollo de hardware IoT, arquitectura de software, ciencia de datos e inteligencia artificial trabajando en conjunto.",
+                  "Engineers specialized in IoT hardware development, software architecture, data science and artificial intelligence working together."
                 )}</p>
               </div>
               <div className="about-card">
-                <div className="card-icon">⚙️</div>
-                <h3>{getText("Tecnologías", "Technologies")}</h3>
+                <div className="card-icon">🚀</div>
+                <h3>{getText("Innovación Continua", "Continuous Innovation")}</h3>
                 <p>{getText(
-                  "Nuestras áreas de especialización abarcan el IoT, Análisis de Datos, Inteligencia Artificial, Automatización, Control y Robótica.",
-                  "Our areas of specialization include IoT, Data Analysis, Artificial Intelligence, Automation, Control and Robotics."
+                  "Utilizamos las últimas tecnologías en automatización, control, machine learning e integración de LLMs para crear soluciones de vanguardia.",
+                  "We use the latest technologies in automation, control, machine learning and LLM integration to create cutting-edge solutions."
                 )}</p>
               </div>
               <div className="about-card">
-                <div className="card-icon">📈</div>
-                <h3>{getText("Impacto", "Impact")}</h3>
+                <div className="card-icon">🤝</div>
+                <h3>{getText("Compromiso", "Commitment")}</h3>
                 <p>{getText(
-                  "Buscamos que nuestras soluciones tengan un impacto real y medible, contribuyendo a la eficiencia y sostenibilidad.",
-                  "We seek for our solutions to have a real and measurable impact, contributing to efficiency and sustainability."
+                  "Nos comprometemos con la calidad, eficiencia y escalabilidad de cada proyecto, desde el diseño hasta la implementación y soporte continuo.",
+                  "We are committed to the quality, efficiency and scalability of each project, from design to implementation and continuous support."
                 )}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="projects" className="projects">
-        <div className="container">
-          <h2>{getText("Proyectos Destacados", "Featured Projects")}</h2>
-          <div className="section-line"></div>
-          <p className="section-intro">
-            {getText(
-              "En Cat-Tech Future, desarrollamos soluciones tecnológicas innovadoras para diversos sectores.",
-              "At Cat-Tech Future, we develop innovative technological solutions for various sectors."
-            )}
-          </p>
-          
-          <div className="projects-grid">
-            <div className="project-card">
-              <div className="project-image">🌱</div>
-              <div className="project-content">
-                <h3>{getText("Sistema Inteligente para cultivos", "Smart Greenhouse System")}</h3>
-                <div className="card-line"></div>
-                <p>{getText(
-                  "Nuestro sistema de automatización y control de cultivos utiliza inteligencia artificial y sensores IoT para optimizar la producción agrícola.",
-                  "Our greenhouse automation and control system uses artificial intelligence and IoT sensors to optimize agricultural production."
-                )}</p>
-                <a href="#contact" className="btn-link">
-                  {getText("Más información →", "More information →")}
-                </a>
-              </div>
-            </div>
-
-            <div className="project-card">
-              <div className="project-image">💧</div>
-              <div className="project-content">
-                <h3>{getText("Sistema de Riego Inteligente", "Smart Irrigation System")}</h3>
-                <div className="card-line"></div>
-                <p>{getText(
-                  "Sistema de riego automatizado que utiliza sensores y control inteligente para suministrar la cantidad óptima de agua a los parques y jardines.",
-                  "Automated irrigation system that uses sensors and intelligent control to supply the optimal amount of water to parks and gardens."
-                )}</p>
-                <a href="#contact" className="btn-link">
-                  {getText("Más información →", "More information →")}
-                </a>
               </div>
             </div>
           </div>
@@ -239,53 +200,295 @@ const App = () => {
         <div className="container">
           <h2>{getText("Nuestros Servicios", "Our Services")}</h2>
           <div className="section-line"></div>
+          <p className="section-intro">
+            {getText(
+              "Ofrecemos soluciones tecnológicas integrales que combinan hardware, software y análisis de datos para impulsar tu negocio.",
+              "We offer comprehensive technology solutions that combine hardware, software and data analysis to boost your business."
+            )}
+          </p>
           <div className="services-grid">
             <div className="service-card">
-              <div className="service-icon">📡</div>
-              <h3>{getText("Desarrollo de Proyectos de IoT", "IoT Project Development")}</h3>
+              <div className="service-icon">🔧</div>
+              <h3>{getText("Desarrollo de Hardware IoT", "IoT Hardware Development")}</h3>
               <p>{getText(
-                "Diseño e implementación de soluciones de Internet de las Cosas para la conectividad y el control.",
-                "Design and implementation of Internet of Things solutions for connectivity and control."
+                "Diseño y fabricación de dispositivos IoT personalizados para automatización y control. Sensores, actuadores y sistemas embebidos con conectividad en tiempo real.",
+                "Design and manufacturing of custom IoT devices for automation and control. Sensors, actuators and embedded systems with real-time connectivity."
+              )}</p>
+            </div>
+            <div className="service-card">
+              <div className="service-icon">💻</div>
+              <h3>{getText("Desarrollo de Software", "Software Development")}</h3>
+              <p>{getText(
+                "Aplicaciones web escalables, APIs RESTful, dashboards interactivos y diseño de bases de datos robustas. Soluciones personalizadas para tu negocio.",
+                "Scalable web applications, RESTful APIs, interactive dashboards and robust database design. Custom solutions for your business."
               )}</p>
             </div>
             <div className="service-card">
               <div className="service-icon">📊</div>
-              <h3>{getText("Análisis de Datos y Big Data", "Data Analysis and Big Data")}</h3>
+              <h3>{getText("Análisis y Ciencia de Datos", "Data Analysis & Science")}</h3>
               <p>{getText(
-                "Recopilación y análisis de grandes volúmenes de datos para decisiones estratégicas.",
-                "Collection and analysis of large volumes of data for strategic decisions."
-              )}</p>
-            </div>
-            <div className="service-card">
-              <div className="service-icon">🧠</div>
-              <h3>{getText("Inteligencia Artificial", "Artificial Intelligence")}</h3>
-              <p>{getText(
-                "Desarrollo de modelos de IA y aprendizaje automático para automatización y optimización.",
-                "Development of AI and machine learning models for automation and optimization."
+                "Análisis predictivo, modelos de Machine Learning, pipelines ETL, visualización avanzada y consultoría en ciencia de datos para decisiones estratégicas.",
+                "Predictive analysis, Machine Learning models, ETL pipelines, advanced visualization and data science consulting for strategic decisions."
               )}</p>
             </div>
             <div className="service-card">
               <div className="service-icon">⚙️</div>
-              <h3>{getText("Automatización Industrial", "Industrial Automation")}</h3>
+              <h3>{getText("Automatización y Control", "Automation & Control")}</h3>
               <p>{getText(
-                "Diseño e implementación de sistemas de automatización y control para la industria.",
-                "Design and implementation of automation and control systems for industry."
+                "Sistemas de control industrial, automatización de procesos, monitoreo remoto y control en tiempo real para optimizar operaciones.",
+                "Industrial control systems, process automation, remote monitoring and real-time control to optimize operations."
               )}</p>
             </div>
             <div className="service-card">
               <div className="service-icon">🤖</div>
-              <h3>{getText("Robótica", "Robotics")}</h3>
+              <h3>{getText("Inteligencia Artificial", "Artificial Intelligence")}</h3>
               <p>{getText(
-                "Diseño y desarrollo de soluciones robóticas para diversas aplicaciones.",
-                "Design and development of robotic solutions for various applications."
+                "Implementación de modelos de IA con TensorFlow y PyTorch, integración de LLMs y soluciones de aprendizaje automático personalizadas.",
+                "Implementation of AI models with TensorFlow and PyTorch, LLM integration and custom machine learning solutions."
               )}</p>
             </div>
             <div className="service-card">
-              <div className="service-icon">💡</div>
+              <div className="service-icon">🎯</div>
               <h3>{getText("Consultoría Tecnológica", "Technology Consulting")}</h3>
               <p>{getText(
-                "Asesoramiento en proyectos de innovación y transformación digital.",
-                "Advisory services for innovation projects and digital transformation."
+                "Asesoramiento en transformación digital, arquitectura de soluciones, selección de tecnologías y estrategia de implementación.",
+                "Advisory in digital transformation, solution architecture, technology selection and implementation strategy."
+              )}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Technologies Section */}
+      <section id="technologies" className="technologies">
+        <div className="container">
+          <h2>{getText("Stack Tecnológico", "Technology Stack")}</h2>
+          <div className="section-line"></div>
+          <p className="section-intro">
+            {getText(
+              "Utilizamos tecnologías modernas y robustas para crear soluciones escalables y de alto rendimiento.",
+              "We use modern and robust technologies to create scalable and high-performance solutions."
+            )}
+          </p>
+          
+          <div className="tech-grid">
+            <div className="tech-category">
+              <h3>
+                <span className="tech-icon">⚡</span>
+                {getText("Hardware & Embebidos", "Hardware & Embedded")}
+              </h3>
+              <div className="tech-list">
+                <span className="tech-item">C/C++</span>
+                <span className="tech-item">Raspberry Pi</span>
+                <span className="tech-item">ESP32/ESP8266</span>
+                <span className="tech-item">Sensores IoT</span>
+              </div>
+            </div>
+
+            <div className="tech-category">
+              <h3>
+                <span className="tech-icon">💻</span>
+                {getText("Desarrollo Backend", "Backend Development")}
+              </h3>
+              <div className="tech-list">
+                <span className="tech-item">Python</span>
+                <span className="tech-item">Flask</span>
+                <span className="tech-item">PostgreSQL</span>
+                <span className="tech-item">TimescaleDB</span>
+              </div>
+            </div>
+
+            <div className="tech-category">
+              <h3>
+                <span className="tech-icon">🎨</span>
+                {getText("Desarrollo Frontend", "Frontend Development")}
+              </h3>
+              <div className="tech-list">
+                <span className="tech-item">React</span>
+                <span className="tech-item">JavaScript</span>
+                <span className="tech-item">HTML/CSS</span>
+                <span className="tech-item">Dashboards</span>
+              </div>
+            </div>
+
+            <div className="tech-category">
+              <h3>
+                <span className="tech-icon">🤖</span>
+                {getText("IA & Machine Learning", "AI & Machine Learning")}
+              </h3>
+              <div className="tech-list">
+                <span className="tech-item">TensorFlow</span>
+                <span className="tech-item">PyTorch</span>
+                <span className="tech-item">LLM Integration</span>
+                <span className="tech-item">Scikit-learn</span>
+              </div>
+            </div>
+
+            <div className="tech-category">
+              <h3>
+                <span className="tech-icon">📊</span>
+                {getText("Análisis de Datos", "Data Analysis")}
+              </h3>
+              <div className="tech-list">
+                <span className="tech-item">Pandas</span>
+                <span className="tech-item">NumPy</span>
+                <span className="tech-item">Plotly</span>
+                <span className="tech-item">Matplotlib</span>
+                <span className="tech-item">Seaborn</span>
+                <span className="tech-item">Jupyter</span>
+                <span className="tech-item">ETL Pipelines</span>
+              </div>
+            </div>
+
+            <div className="tech-category">
+              <h3>
+                <span className="tech-icon">🔧</span>
+                {getText("DevOps & Tools", "DevOps & Tools")}
+              </h3>
+              <div className="tech-list">
+                <span className="tech-item">Docker</span>
+                <span className="tech-item">Git</span>
+                <span className="tech-item">REST APIs</span>
+                <span className="tech-item">CI/CD</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section id="portfolio" className="portfolio">
+        <div className="container">
+          <h2>{getText("Portfolio", "Portfolio")}</h2>
+          <div className="section-line"></div>
+          <p className="section-intro">
+            {getText(
+              "Casos de éxito que demuestran nuestras capacidades en desarrollo de soluciones tecnológicas integrales.",
+              "Success cases that demonstrate our capabilities in developing comprehensive technological solutions."
+            )}
+          </p>
+          
+          <div className="projects-grid">
+            <div className="project-card">
+              <div className="project-image">🌱</div>
+              <div className="project-content">
+                <h3>{getText("Sistema Inteligente para Cultivos", "Smart Greenhouse System")}</h3>
+                <div className="card-line"></div>
+                <p>{getText(
+                  "Solución completa que integra hardware IoT, software de monitoreo y análisis predictivo para optimizar la producción agrícola mediante control automatizado de clima y riego.",
+                  "Complete solution that integrates IoT hardware, monitoring software and predictive analysis to optimize agricultural production through automated climate and irrigation control."
+                )}</p>
+                <div className="tech-tags">
+                  <span className="tech-tag">ESP32</span>
+                  <span className="tech-tag">C</span>
+                  <span className="tech-tag">Python</span>
+                  <span className="tech-tag">React</span>
+                  <span className="tech-tag">Sensores RS485</span>
+                  <span className="tech-tag">ML</span>
+                  <span className="tech-tag">PostgreSQL</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="project-card">
+              <div className="project-image">💧</div>
+              <div className="project-content">
+                <h3>{getText("Sistema de Riego Inteligente", "Smart Irrigation System")}</h3>
+                <div className="card-line"></div>
+                <p>{getText(
+                  "Sistema automatizado con sensores IoT y dashboard en tiempo real para gestión eficiente del agua en espacios públicos, reduciendo consumo hasta un 40%.",
+                  "Automated system with IoT sensors and real-time dashboard for efficient water management in public spaces, reducing consumption by up to 40%."
+                )}</p>
+                <div className="tech-tags">
+                  <span className="tech-tag">ESP32</span>
+                  <span className="tech-tag">Python</span>
+                  <span className="tech-tag">C</span>
+                  <span className="tech-tag">Sensores RS485</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sectors Section */}
+      <section id="sectors" className="sectors">
+        <div className="container">
+          <h2>{getText("Sectores que Atendemos", "Sectors We Serve")}</h2>
+          <div className="section-line"></div>
+          <div className="sectors-grid">
+            <div className="sector-card">
+              <div className="sector-icon">🏭</div>
+              <h3>{getText("Industria", "Industry")}</h3>
+              <p>{getText(
+                "Automatización de procesos, control de calidad, monitoreo de producción y análisis predictivo para manufactura y producción industrial.",
+                "Process automation, quality control, production monitoring and predictive analysis for manufacturing and industrial production."
+              )}</p>
+            </div>
+            <div className="sector-card">
+              <div className="sector-icon">🏪</div>
+              <h3>{getText("Retail & PyMEs", "Retail & SMEs")}</h3>
+              <p>{getText(
+                "Sistemas de gestión, análisis de ventas, dashboards ejecutivos, automatización de inventarios y soluciones de e-commerce para pequeñas y medianas empresas.",
+                "Management systems, sales analysis, executive dashboards, inventory automation and e-commerce solutions for small and medium enterprises."
+              )}</p>
+            </div>
+            <div className="sector-card">
+              <div className="sector-icon">🏛️</div>
+              <h3>{getText("Gobierno", "Government")}</h3>
+              <p>{getText(
+                "Sistemas de monitoreo urbano, gestión de recursos públicos, análisis de datos para toma de decisiones y soluciones IoT para ciudades inteligentes.",
+                "Urban monitoring systems, public resource management, data analysis for decision making and IoT solutions for smart cities."
+              )}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Process Section */}
+      <section id="process" className="process">
+        <div className="container">
+          <h2>{getText("Nuestro Proceso de Trabajo", "Our Work Process")}</h2>
+          <div className="section-line"></div>
+          <div className="process-grid">
+            <div className="process-step">
+              <div className="step-number">01</div>
+              <h3>{getText("Análisis y Consultoría", "Analysis & Consulting")}</h3>
+              <p>{getText(
+                "Entendemos tus necesidades y desafíos. Realizamos un análisis profundo para diseñar la solución óptima.",
+                "We understand your needs and challenges. We perform a deep analysis to design the optimal solution."
+              )}</p>
+            </div>
+            <div className="process-step">
+              <div className="step-number">02</div>
+              <h3>{getText("Diseño y Arquitectura", "Design & Architecture")}</h3>
+              <p>{getText(
+                "Diseñamos la arquitectura completa de hardware y software, seleccionando las mejores tecnologías para tu proyecto.",
+                "We design the complete hardware and software architecture, selecting the best technologies for your project."
+              )}</p>
+            </div>
+            <div className="process-step">
+              <div className="step-number">03</div>
+              <h3>{getText("Desarrollo e Implementación", "Development & Implementation")}</h3>
+              <p>{getText(
+                "Desarrollamos la solución con metodologías ágiles, manteniendo comunicación constante y entregas incrementales.",
+                "We develop the solution with agile methodologies, maintaining constant communication and incremental deliveries."
+              )}</p>
+            </div>
+            <div className="process-step">
+              <div className="step-number">04</div>
+              <h3>{getText("Despliegue y Capacitación", "Deployment & Training")}</h3>
+              <p>{getText(
+                "Implementamos la solución en producción y capacitamos a tu equipo para su operación y mantenimiento.",
+                "We implement the solution in production and train your team for its operation and maintenance."
+              )}</p>
+            </div>
+            <div className="process-step">
+              <div className="step-number">05</div>
+              <h3>{getText("Soporte Continuo", "Continuous Support")}</h3>
+              <p>{getText(
+                "Brindamos soporte técnico, actualizaciones y mejoras continuas para asegurar el éxito a largo plazo.",
+                "We provide technical support, updates and continuous improvements to ensure long-term success."
               )}</p>
             </div>
           </div>
@@ -340,8 +543,9 @@ const App = () => {
             </div>
             <div className="footer-links">
               <a href="#about">{getText("Sobre Nosotros", "About Us")}</a>
-              <a href="#projects">{getText("Proyectos", "Projects")}</a>
               <a href="#services">{getText("Servicios", "Services")}</a>
+              <a href="#technologies">{getText("Tecnologías", "Technologies")}</a>
+              <a href="#portfolio">{getText("Portfolio", "Portfolio")}</a>
               <a href="#contact">{getText("Contacto", "Contact")}</a>
             </div>
           </div>
