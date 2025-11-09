@@ -170,8 +170,8 @@ const App = () => {
                 <div className="card-icon">👥</div>
                 <h3>{getText("Equipo Experto", "Expert Team")}</h3>
                 <p>{getText(
-                  "Ingenieros especializados en desarrollo de hardware IoT, arquitectura de software, ciencia de datos e inteligencia artificial trabajando en conjunto.",
-                  "Engineers specialized in IoT hardware development, software architecture, data science and artificial intelligence working together."
+                  "Especialistas en desarrollo de hardware IoT, arquitectura de software, ciencia de datos e inteligencia artificial trabajando en conjunto.",
+                  "specialized in IoT hardware development, software architecture, data science and artificial intelligence working together."
                 )}</p>
               </div>
               <div className="about-card">
