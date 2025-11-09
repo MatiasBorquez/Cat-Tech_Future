@@ -1155,6 +1155,17 @@ section {
   text-align: center;
 }
 
+.modal-actions .btn-outline {
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  background: transparent;
+}
+
+.modal-actions .btn-outline:hover {
+  background: var(--primary);
+  color: white;
+}
+
 .demo-info {
   margin-top: 2rem;
   padding-top: 2rem;
@@ -1170,8 +1181,12 @@ section {
 
 /* Clickable Project Card */
 .project-card.clickable {
-  cursor: pointer;
+  cursor: pointer !important;
   transition: all 0.3s ease;
+}
+
+.project-card.clickable * {
+  cursor: pointer !important;
 }
 
 .project-card.clickable:hover {

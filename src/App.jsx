@@ -6,6 +6,7 @@ const App = () => {
   const [currentLang, setCurrentLang] = useState('es');
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showCropModal, setShowCropModal] = useState(false);
 
   // Initialize theme and language
   useEffect(() => {
@@ -27,6 +28,15 @@ const App = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showCropModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [showCropModal]);
 
   const toggleTheme = () => {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -52,6 +62,14 @@ const App = () => {
 
   const getText = (esText, enText) => {
     return currentLang === 'es' ? esText : enText;
+  };
+
+  const openCropModal = () => {
+    setShowCropModal(true);
+  };
+
+  const closeCropModal = () => {
+    setShowCropModal(false);
   };
 
   return (
@@ -120,14 +138,14 @@ const App = () => {
           <div className="hero-content">
             <h1>
               {getText(
-                "Soluciones Tecnológicas Integrales para tu Negocio",
-                "Comprehensive Technology Solutions for Your Business"
+                "Tecnología Global para Desafíos Locales",
+                "Global Technology for Local Challenges"
               )}
             </h1>
             <p>
               {getText(
-                "Desarrollo de Hardware IoT, Software Personalizado y Análisis de Datos. Transformamos desafíos complejos en soluciones innovadoras.",
-                "IoT Hardware Development, Custom Software and Data Analysis. We transform complex challenges into innovative solutions."
+                "Llevamos la modernización tecnológica al norte argentino. Desarrollo de Hardware IoT, Software Personalizado y Análisis de Datos para transformar tu negocio.",
+                "We bring technological modernization to northern Argentina. IoT Hardware Development, Custom Software and Data Analysis to transform your business."
               )}
             </p>
             <div className="hero-buttons">
@@ -154,40 +172,40 @@ const App = () => {
           <div className="section-line"></div>
           <div className="about-content">
             <p>{getText(
-              "Somos una empresa de desarrollo tecnológico especializada en crear soluciones integrales de hardware y software. Nuestro equipo combina experiencia en ingeniería electrónica, desarrollo de software y ciencia de datos para transformar desafíos complejos en soluciones innovadoras.",
-              "We are a technology development company specialized in creating comprehensive hardware and software solutions. Our team combines experience in electronic engineering, software development and data science to transform complex challenges into innovative solutions."
+              "Somos una empresa de desarrollo tecnológico especializada en crear soluciones integrales de hardware y software. Nacidos en el norte argentino, trabajamos para llevar la modernización tecnológica a una región destacada por su potencial pero con baja adopción de tecnología. Nuestro equipo combina experiencia en ingeniería electrónica, desarrollo de software y ciencia de datos para transformar desafíos complejos en soluciones innovadoras y sustentables.",
+              "We are a technology development company specialized in creating comprehensive hardware and software solutions. Born in northern Argentina, we work to bring technological modernization to a region known for its potential but with low technology adoption. Our team combines experience in electronic engineering, software development and data science to transform complex challenges into innovative and sustainable solutions."
             )}</p>
             <div className="about-grid">
               <div className="about-card">
                 <div className="card-icon">🎯</div>
                 <h3>{getText("Nuestro Enfoque", "Our Approach")}</h3>
                 <p>{getText(
-                  "Desarrollamos soluciones end-to-end que integran hardware IoT, software personalizado y análisis de datos para impulsar la transformación digital de tu negocio.",
-                  "We develop end-to-end solutions that integrate IoT hardware, custom software and data analysis to drive your business digital transformation."
+                  "Desarrollamos soluciones end-to-end que integran hardware IoT, software personalizado y análisis de datos para impulsar la transformación digital de tu negocio con un fuerte compromiso ambiental.",
+                  "We develop end-to-end solutions that integrate IoT hardware, custom software and data analysis to drive your business digital transformation with a strong environmental commitment."
                 )}</p>
               </div>
               <div className="about-card">
                 <div className="card-icon">👥</div>
                 <h3>{getText("Equipo Experto", "Expert Team")}</h3>
                 <p>{getText(
-                  "Especialistas en desarrollo de hardware IoT, arquitectura de software, ciencia de datos e inteligencia artificial trabajando en conjunto.",
-                  "specialized in IoT hardware development, software architecture, data science and artificial intelligence working together."
+                  "Ingenieros especializados en desarrollo de hardware IoT, arquitectura de software, ciencia de datos e inteligencia artificial trabajando en conjunto para crear el futuro tecnológico del norte argentino.",
+                  "Engineers specialized in IoT hardware development, software architecture, data science and artificial intelligence working together to create the technological future of northern Argentina."
                 )}</p>
               </div>
               <div className="about-card">
                 <div className="card-icon">🚀</div>
                 <h3>{getText("Innovación Continua", "Continuous Innovation")}</h3>
                 <p>{getText(
-                  "Utilizamos las últimas tecnologías en automatización, control, machine learning e integración de LLMs para crear soluciones de vanguardia.",
-                  "We use the latest technologies in automation, control, machine learning and LLM integration to create cutting-edge solutions."
+                  "Utilizamos las últimas tecnologías en automatización, control, machine learning e integración de LLMs para crear soluciones de vanguardia que impulsen el desarrollo regional.",
+                  "We use the latest technologies in automation, control, machine learning and LLM integration to create cutting-edge solutions that drive regional development."
                 )}</p>
               </div>
               <div className="about-card">
                 <div className="card-icon">🤝</div>
                 <h3>{getText("Compromiso", "Commitment")}</h3>
                 <p>{getText(
-                  "Nos comprometemos con la calidad, eficiencia y escalabilidad de cada proyecto, desde el diseño hasta la implementación y soporte continuo.",
-                  "We are committed to the quality, efficiency and scalability of each project, from design to implementation and continuous support."
+                  "Nos comprometemos con la calidad, eficiencia, escalabilidad y sustentabilidad de cada proyecto, creando empleo tecnológico local para retener talento en la región.",
+                  "We are committed to the quality, efficiency, scalability and sustainability of each project, creating local tech jobs to retain talent in the region."
                 )}</p>
               </div>
             </div>
@@ -363,20 +381,20 @@ const App = () => {
           <div className="section-line"></div>
           <p className="section-intro">
             {getText(
-              "Casos de éxito que demuestran nuestras capacidades en desarrollo de soluciones tecnológicas integrales.",
-              "Success cases that demonstrate our capabilities in developing comprehensive technological solutions."
+              "Casos de éxito que demuestran nuestras capacidades en desarrollo de soluciones tecnológicas integrales y sustentables.",
+              "Success cases that demonstrate our capabilities in developing comprehensive and sustainable technological solutions."
             )}
           </p>
           
           <div className="projects-grid">
-            <div className="project-card">
+            <div className="project-card clickable" onClick={openCropModal}>
               <div className="project-image">🌱</div>
               <div className="project-content">
-                <h3>{getText("Sistema Inteligente para Cultivos", "Smart Greenhouse System")}</h3>
+                <h3>{getText("Sistema Inteligente para Cultivos", "Smart Crop System")}</h3>
                 <div className="card-line"></div>
                 <p>{getText(
-                  "Solución completa que integra hardware IoT, software de monitoreo y análisis predictivo para optimizar la producción agrícola mediante control automatizado de clima y riego.",
-                  "Complete solution that integrates IoT hardware, monitoring software and predictive analysis to optimize agricultural production through automated climate and irrigation control."
+                  "Solución completa que integra hardware IoT con sensores de calidad industrial, software de monitoreo en tiempo real y análisis predictivo mediante IA para optimizar la producción agrícola. Actualmente en fase de pruebas con el MVP mejorado.",
+                  "Complete solution that integrates IoT hardware with industrial-quality sensors, real-time monitoring software and predictive analysis through AI to optimize agricultural production. Currently in testing phase with improved MVP."
                 )}</p>
                 <div className="tech-tags">
                   <span className="tech-tag">ESP32</span>
@@ -387,6 +405,9 @@ const App = () => {
                   <span className="tech-tag">ML</span>
                   <span className="tech-tag">PostgreSQL</span>
                 </div>
+                <div className="click-hint">
+                  {getText("Clic para ver más detalles →", "Click to see more details →")}
+                </div>
               </div>
             </div>
 
@@ -396,9 +417,23 @@ const App = () => {
                 <h3>{getText("Sistema de Riego Inteligente", "Smart Irrigation System")}</h3>
                 <div className="card-line"></div>
                 <p>{getText(
-                  "Sistema automatizado con sensores IoT y dashboard en tiempo real para gestión eficiente del agua en espacios públicos, reduciendo consumo hasta un 40%.",
-                  "Automated system with IoT sensors and real-time dashboard for efficient water management in public spaces, reducing consumption by up to 40%."
+                  "Sistema automatizado con sensores IoT y dashboard en tiempo real para gestión eficiente del agua en espacios públicos, reduciendo consumo hasta un 40%. Contribuye al cumplimiento de los ODS.",
+                  "Automated system with IoT sensors and real-time dashboard for efficient water management in public spaces, reducing consumption by up to 40%. Contributes to SDG compliance."
                 )}</p>
+                <div className="ods-badges">
+                  <div className="ods-badge">
+                    <span className="ods-number">6</span>
+                    <span className="ods-text">{getText("Agua limpia y saneamiento", "Clean water and sanitation")}</span>
+                  </div>
+                  <div className="ods-badge">
+                    <span className="ods-number">11</span>
+                    <span className="ods-text">{getText("Ciudades sostenibles", "Sustainable cities")}</span>
+                  </div>
+                  <div className="ods-badge">
+                    <span className="ods-number">13</span>
+                    <span className="ods-text">{getText("Acción por el clima", "Climate action")}</span>
+                  </div>
+                </div>
                 <div className="tech-tags">
                   <span className="tech-tag">ESP32</span>
                   <span className="tech-tag">Python</span>
@@ -495,6 +530,57 @@ const App = () => {
         </div>
       </section>
 
+      {/* Vision Section */}
+      <section id="vision" className="vision">
+        <div className="container">
+          <h2>{getText("Nuestra Visión", "Our Vision")}</h2>
+          <div className="section-line"></div>
+          <div className="vision-content">
+            <div className="vision-main">
+              <div className="vision-icon">🌟</div>
+              <h3>{getText("Modernización Tecnológica del Norte Argentino", "Technological Modernization of Northern Argentina")}</h3>
+              <p>{getText(
+                "Nuestra misión es transformar el norte argentino en un polo de innovación tecnológica. Creemos que la tecnología global debe estar al alcance de todos, sin importar la ubicación geográfica. El norte argentino se destaca por su gran potencial pero sufre de baja adopción tecnológica y escasas oportunidades de empleo en el sector tech, lo que obliga a muchos ingenieros y profesionales a abandonar la región para poder trabajar en su especialidad.",
+                "Our mission is to transform northern Argentina into a technological innovation hub. We believe that global technology should be accessible to everyone, regardless of geographic location. Northern Argentina stands out for its great potential but suffers from low technology adoption and scarce employment opportunities in the tech sector, forcing many engineers and professionals to leave the region to work in their specialty."
+              )}</p>
+              <p>{getText(
+                "Queremos cambiar esta realidad. Desarrollamos tecnología global para desafíos locales, demostrando que desde Catamarca podemos crear soluciones de clase mundial. Nuestro objetivo es generar empleo tecnológico local, retener talento en la región y demostrar que la innovación no tiene fronteras geográficas.",
+                "We want to change this reality. We develop global technology for locals challenges, demonstrating that from Catamarca we can create world-class solutions. Our goal is to generate local tech employment, retain talent in the region and demonstrate that innovation has no geographic boundaries."
+              )}</p>
+            </div>
+            
+            <div className="vision-grid">
+              <div className="vision-card">
+                <div className="vision-card-icon">🌍</div>
+                <h4>{getText("Impacto Regional", "Regional Impact")}</h4>
+                <p>{getText(
+                  "Crear oportunidades de empleo tecnológico en el norte argentino para retener talento local y atraer profesionales que buscan radicarse en la región.",
+                  "Create technological employment opportunities in northern Argentina to retain local talent and attract professionals looking to settle in the region."
+                )}</p>
+              </div>
+              
+              <div className="vision-card">
+                <div className="vision-card-icon">♻️</div>
+                <h4>{getText("Sustentabilidad", "Sustainability")}</h4>
+                <p>{getText(
+                  "Todas nuestras soluciones están diseñadas con un fuerte compromiso ambiental, contribuyendo activamente al cumplimiento de los Objetivos de Desarrollo Sostenible (ODS).",
+                  "All our solutions are designed with a strong environmental commitment, actively contributing to the fulfillment of the Sustainable Development Goals (SDGs)."
+                )}</p>
+              </div>
+              
+              <div className="vision-card">
+                <div className="vision-card-icon">🚀</div>
+                <h4>{getText("Innovación sin Fronteras", "Innovation without Borders")}</h4>
+                <p>{getText(
+                  "Demostramos que la ubicación geográfica no limita la capacidad de innovar. Desarrollamos soluciones de nivel global desde el corazón del norte argentino.",
+                  "We demonstrate that geographic location does not limit the ability to innovate. We develop global-level solutions from the heart of northern Argentina."
+                )}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Contact Section */}
       <section id="contact" className="contact">
         <div className="container">
@@ -561,6 +647,90 @@ const App = () => {
         <button onClick={scrollToTop} id="scroll-top">
           ↑
         </button>
+      )}
+
+      {/* Crop System Modal */}
+      {showCropModal && (
+        <div className="modal-overlay" onClick={closeCropModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={closeCropModal}>
+              ✕
+            </button>
+            
+            <div className="modal-header">
+              <div className="modal-icon">🌱</div>
+              <h2>{getText("Sistema Inteligente para Cultivos", "Smart Crop System")}</h2>
+            </div>
+            
+            <div className="modal-body">
+              <div className="modal-section">
+                <h3>{getText("Descripción del Producto", "Product Description")}</h3>
+                <p>{getText(
+                  "Nuestro Sistema Inteligente para Cultivos es una solución integral que combina hardware IoT de calidad industrial con software avanzado de monitoreo y análisis predictivo mediante inteligencia artificial. El sistema permite optimizar la producción agrícola mediante el control automatizado de las condiciones ambientales críticas para el desarrollo de los cultivos.",
+                  "Our Smart Crop System is a comprehensive solution that combines industrial-quality IoT hardware with advanced monitoring software and predictive analysis through artificial intelligence. The system allows optimizing agricultural production through automated control of critical environmental conditions for crop development."
+                )}</p>
+              </div>
+
+              <div className="modal-section">
+                <h3>{getText("Estado Actual del MVP", "Current MVP Status")}</h3>
+                <p>{getText(
+                  "Hemos mejorado significativamente nuestro MVP incorporando sensores de calidad industrial para garantizar la precisión y confiabilidad de los datos recopilados. Las pruebas del sistema mejorado están programadas para comenzar próximamente, junto con el diseño de modelos de optimización mediante IA que permitirán decisiones más inteligentes y automatizadas.",
+                  "We have significantly improved our MVP by incorporating industrial-quality sensors to ensure the accuracy and reliability of collected data. Testing of the improved system is scheduled to begin soon, along with the design of optimization models through AI that will enable smarter and more automated decisions."
+                )}</p>
+              </div>
+
+              <div className="modal-section">
+                <h3>{getText("Desarrollo Futuro: Hidroponía", "Future Development: Hydroponics")}</h3>
+                <p>{getText(
+                  "Estamos desarrollando una versión especializada del sistema para cultivos hidropónicos. Esta adaptación incluirá control preciso de nutrientes, pH, conductividad eléctrica y oxigenación del agua, abriendo nuevas posibilidades para la agricultura urbana y cultivos de alta densidad.",
+                  "We are developing a specialized version of the system for hydroponic crops. This adaptation will include precise control of nutrients, pH, electrical conductivity and water oxygenation, opening new possibilities for urban agriculture and high-density crops."
+                )}</p>
+              </div>
+
+              <div className="modal-section highlight">
+                <h3>✨ {getText("Oferta para Primeros Adoptadores", "Early Adopter Offer")}</h3>
+                <p>{getText(
+                  "Si estás interesado en ser uno de nuestros primeros clientes, ofrecemos beneficios exclusivos:",
+                  "If you are interested in being one of our first customers, we offer exclusive benefits:"
+                )}</p>
+                <ul className="benefits-list">
+                  <li>🎯 {getText("Descuentos especiales en la adquisición del sistema", "Special discounts on system acquisition")}</li>
+                  <li>🔄 {getText("Actualizaciones gratuitas de software y firmware", "Free software and firmware updates")}</li>
+                  <li>🧪 {getText("Período de prueba del servicio y producto sin costo", "Free service and product trial period")}</li>
+                  <li>🤝 {getText("Soporte técnico prioritario", "Priority technical support")}</li>
+                  <li>📊 {getText("Participación en el desarrollo de nuevas funcionalidades", "Participation in new feature development")}</li>
+                </ul>
+              </div>
+
+              <div className="modal-actions">
+                <a 
+                  href="https://app.cattechfuture.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn btn-primary btn-large"
+                >
+                  {getText("🌐 Ver Demo del Sistema", "🌐 View System Demo")}
+                </a>
+                <a 
+                  href="#contact" 
+                  onClick={closeCropModal}
+                  className="btn btn-outline btn-large"
+                >
+                  {getText("📧 Contactar para más información", "📧 Contact for more information")}
+                </a>
+              </div>
+
+              <div className="demo-info">
+                <p className="demo-note">
+                  {getText(
+                    "* La demo incluye un usuario de prueba para que puedas explorar todas las funcionalidades del sistema: visualización de datos en tiempo real, historial de métricas y recomendaciones inteligentes basadas en IA.",
+                    "* The demo includes a test user so you can explore all system functionalities: real-time data visualization, metrics history and AI-based intelligent recommendations."
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
