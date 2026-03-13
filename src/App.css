@@ -1382,3 +1382,258 @@ section {
     gap: 1.5rem;
   }
 }
+
+/* ===================== WHATSAPP FLOATING BUTTON ===================== */
+#whatsapp-float {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  background-color: #25D366;
+  color: white;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  text-decoration: none;
+}
+
+#whatsapp-float:hover {
+  background-color: #128C7E;
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.5);
+}
+
+#whatsapp-float::after {
+  content: 'WhatsApp';
+  position: absolute;
+  left: 4.25rem;
+  background: #25D366;
+  color: white;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+#whatsapp-float:hover::after {
+  opacity: 1;
+}
+
+/* ===================== HERO SUB-CTA ===================== */
+.hero-subcta {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* ===================== SERVICE CARD CTA ===================== */
+.service-cta {
+  display: inline-block;
+  margin-top: 1.25rem;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+  padding-bottom: 2px;
+}
+
+.service-cta:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ===================== SERVICES BUDGET NOTICE ===================== */
+.services-budget-notice {
+  text-align: center;
+  margin: 0 auto 2rem;
+  max-width: 700px;
+  padding: 1rem 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--accent);
+  border-radius: 0.75rem;
+  color: var(--text-tertiary);
+  font-size: 0.95rem;
+}
+
+.services-budget-notice strong {
+  color: var(--text-secondary);
+}
+
+/* ===================== TRUST BANNER ===================== */
+.trust-banner {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  padding: 3.5rem 0;
+  color: white;
+}
+
+.trust-banner-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.trust-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.trust-stat .stat-number {
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.trust-stat .stat-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  max-width: 150px;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .trust-banner-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* ===================== CONTACT SECTION REDESIGN ===================== */
+.contact-process {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0 auto 2.5rem;
+  max-width: 750px;
+}
+
+.contact-process-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 2rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow);
+}
+
+.contact-process-step .step-icon {
+  font-size: 1.1rem;
+}
+
+.contact-process-arrow {
+  color: var(--accent);
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.contact-trust {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin: 0 auto 2.5rem;
+  max-width: 720px;
+}
+
+.contact-trust-item {
+  text-align: center;
+  padding: 1.25rem 1rem;
+  background: var(--bg-secondary);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+}
+
+.contact-trust-item .trust-icon {
+  font-size: 1.75rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.contact-trust-item p {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.contact-main-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.contact-or {
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+}
+
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: #25D366;
+  color: white;
+  padding: 0.9rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.btn-whatsapp:hover {
+  background-color: #128C7E;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+}
+
+@media (max-width: 768px) {
+  .contact-trust {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .contact-process {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .contact-process-arrow {
+    transform: rotate(90deg);
+  }
+
+  .btn-whatsapp {
+    font-size: 0.95rem;
+    padding: 0.8rem 1.5rem;
+  }
+}

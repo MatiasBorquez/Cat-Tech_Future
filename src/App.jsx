@@ -72,6 +72,8 @@ const App = () => {
     setShowCropModal(false);
   };
 
+  const WA_URL = "https://wa.me/543834324087?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20sus%20servicios";
+
   return (
     <div className="min-h-screen">
       {/* Theme and Language Controls */}
@@ -148,6 +150,12 @@ const App = () => {
                 "We bring technological modernization to northern Argentina. IoT Hardware Development, Custom Software and Data Analysis to transform your business."
               )}
             </p>
+            <p className="hero-subcta">
+              {getText(
+                "✓ Consulta gratuita sin compromiso — Respondemos en menos de 24 horas",
+                "✓ Free consultation with no commitment — We respond within 24 hours"
+              )}
+            </p>
             <div className="hero-buttons">
               <a href="#contact" className="btn btn-primary">
                 {getText("Contáctanos", "Contact Us")}
@@ -172,8 +180,8 @@ const App = () => {
           <div className="section-line"></div>
           <div className="about-content">
             <p>{getText(
-              "Somos una empresa de desarrollo tecnológico especializada en crear soluciones integrales de hardware y software. Nacidos en el norte argentino, trabajamos para llevar la modernización tecnológica a una región destacada por su potencial pero con baja adopción de tecnología. Nuestro equipo combina experiencia en ingeniería electrónica, desarrollo de software y ciencia de datos para transformar desafíos complejos en soluciones innovadoras y sustentables.",
-              "We are a technology development company specialized in creating comprehensive hardware and software solutions. Born in northern Argentina, we work to bring technological modernization to a region known for its potential but with low technology adoption. Our team combines experience in electronic engineering, software development and data science to transform complex challenges into innovative and sustainable solutions."
+              "Somos una empresa de desarrollo tecnológico especializada en crear soluciones integrales de hardware y software. Nacidos en Catamarca, prestamos servicios a empresas e instituciones en toda la región: Tucumán, Santiago del Estero, La Rioja y Córdoba. Nuestro equipo combina experiencia en ingeniería electrónica, desarrollo de software y ciencia de datos para transformar desafíos complejos en soluciones innovadoras y sustentables.",
+              "We are a technology development company specialized in creating comprehensive hardware and software solutions. Based in Catamarca, we serve businesses and institutions across the region: Tucumán, Santiago del Estero, La Rioja and Córdoba. Our team combines experience in electronic engineering, software development and data science to transform complex challenges into innovative and sustainable solutions."
             )}</p>
             <div className="about-grid">
               <div className="about-card">
@@ -224,6 +232,13 @@ const App = () => {
               "We offer comprehensive technology solutions that combine hardware, software and data analysis to boost your business."
             )}
           </p>
+          <p className="services-budget-notice">
+            <strong>{getText("Sin precios fijos:", "No fixed prices:")}</strong>{" "}
+            {getText(
+              "Cada proyecto es único. Diseñamos la solución a medida de tu necesidad y te damos un presupuesto personalizado — sin compromiso.",
+              "Every project is unique. We design the solution tailored to your needs and provide a personalized quote — no commitment required."
+            )}
+          </p>
           <div className="services-grid">
             <div className="service-card">
               <div className="service-icon">🔧</div>
@@ -232,6 +247,7 @@ const App = () => {
                 "Diseño y fabricación de dispositivos IoT personalizados para automatización y control. Sensores, actuadores y sistemas embebidos con conectividad en tiempo real.",
                 "Design and manufacturing of custom IoT devices for automation and control. Sensors, actuators and embedded systems with real-time connectivity."
               )}</p>
+              <a href="#contact" className="service-cta">{getText("Consultar sin compromiso", "Ask without commitment")}</a>
             </div>
             <div className="service-card">
               <div className="service-icon">💻</div>
@@ -240,6 +256,7 @@ const App = () => {
                 "Aplicaciones web escalables, APIs RESTful, dashboards interactivos y diseño de bases de datos robustas. Soluciones personalizadas para tu negocio.",
                 "Scalable web applications, RESTful APIs, interactive dashboards and robust database design. Custom solutions for your business."
               )}</p>
+              <a href="#contact" className="service-cta">{getText("Consultar sin compromiso", "Ask without commitment")}</a>
             </div>
             <div className="service-card">
               <div className="service-icon">📊</div>
@@ -248,6 +265,7 @@ const App = () => {
                 "Análisis predictivo, modelos de Machine Learning, pipelines ETL, visualización avanzada y consultoría en ciencia de datos para decisiones estratégicas.",
                 "Predictive analysis, Machine Learning models, ETL pipelines, advanced visualization and data science consulting for strategic decisions."
               )}</p>
+              <a href="#contact" className="service-cta">{getText("Consultar sin compromiso", "Ask without commitment")}</a>
             </div>
             <div className="service-card">
               <div className="service-icon">⚙️</div>
@@ -256,6 +274,7 @@ const App = () => {
                 "Sistemas de control industrial, automatización de procesos, monitoreo remoto y control en tiempo real para optimizar operaciones.",
                 "Industrial control systems, process automation, remote monitoring and real-time control to optimize operations."
               )}</p>
+              <a href="#contact" className="service-cta">{getText("Consultar sin compromiso", "Ask without commitment")}</a>
             </div>
             <div className="service-card">
               <div className="service-icon">🤖</div>
@@ -264,6 +283,7 @@ const App = () => {
                 "Implementación de modelos de IA con TensorFlow y PyTorch, integración de LLMs y soluciones de aprendizaje automático personalizadas.",
                 "Implementation of AI models with TensorFlow and PyTorch, LLM integration and custom machine learning solutions."
               )}</p>
+              <a href="#contact" className="service-cta">{getText("Consultar sin compromiso", "Ask without commitment")}</a>
             </div>
             <div className="service-card">
               <div className="service-icon">🎯</div>
@@ -272,6 +292,7 @@ const App = () => {
                 "Asesoramiento en transformación digital, arquitectura de soluciones, selección de tecnologías y estrategia de implementación.",
                 "Advisory in digital transformation, solution architecture, technology selection and implementation strategy."
               )}</p>
+              <a href="#contact" className="service-cta">{getText("Consultar sin compromiso", "Ask without commitment")}</a>
             </div>
           </div>
         </div>
@@ -446,6 +467,32 @@ const App = () => {
         </div>
       </section>
 
+      {/* Trust Banner */}
+      <section className="trust-banner">
+        <div className="container">
+          <div className="trust-banner-grid">
+            <div className="trust-stat">
+              <span className="stat-number">2+</span>
+              <span className="stat-label">
+                {getText("Proyectos IoT con hardware industrial", "IoT projects with industrial hardware")}
+              </span>
+            </div>
+            <div className="trust-stat">
+              <span className="stat-number">40%</span>
+              <span className="stat-label">
+                {getText("Reducción de consumo de agua en riego inteligente", "Water consumption reduction in smart irrigation")}
+              </span>
+            </div>
+            <div className="trust-stat">
+              <span className="stat-number">100%</span>
+              <span className="stat-label">
+                {getText("Soluciones a medida del cliente", "100% custom client solutions")}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Sectors Section */}
       <section id="sectors" className="sectors">
         <div className="container">
@@ -554,8 +601,8 @@ const App = () => {
                 <div className="vision-card-icon">🌍</div>
                 <h4>{getText("Impacto Regional", "Regional Impact")}</h4>
                 <p>{getText(
-                  "Crear oportunidades de empleo tecnológico en el norte argentino para retener talento local y atraer profesionales que buscan radicarse en la región.",
-                  "Create technological employment opportunities in northern Argentina to retain local talent and attract professionals looking to settle in the region."
+                  "Crear oportunidades de empleo tecnológico en Catamarca y expandir soluciones hacia Tucumán, Santiago del Estero, La Rioja y Córdoba, reteniendo talento local en la región.",
+                  "Create technological employment opportunities in Catamarca and expand solutions to Tucumán, Santiago del Estero, La Rioja and Córdoba, retaining local talent in the region."
                 )}</p>
               </div>
               
@@ -584,29 +631,84 @@ const App = () => {
       {/* Contact Section */}
       <section id="contact" className="contact">
         <div className="container">
-          <h2>{getText("Contáctanos", "Contact Us")}</h2>
+          <h2>{getText("Hablemos de tu Proyecto", "Let's Talk About Your Project")}</h2>
           <div className="section-line"></div>
           <p className="section-intro">
             {getText(
-              "Estamos listos para colaborar en tu próximo proyecto.",
-              "We are ready to collaborate on your next project."
+              "Sin burocracia, sin compromiso. Contanos tu idea y te respondemos en menos de 24 horas.",
+              "No bureaucracy, no commitment. Tell us your idea and we'll respond within 24 hours."
             )}
           </p>
-          
+
+          {/* Proceso de contacto */}
+          <div className="contact-process">
+            <div className="contact-process-step">
+              <span className="step-icon">💬</span>
+              {getText("Contanos tu proyecto", "Tell us your project")}
+            </div>
+            <span className="contact-process-arrow">→</span>
+            <div className="contact-process-step">
+              <span className="step-icon">🎁</span>
+              {getText("Consulta gratuita", "Free consultation")}
+            </div>
+            <span className="contact-process-arrow">→</span>
+            <div className="contact-process-step">
+              <span className="step-icon">🚀</span>
+              {getText("Diseñamos tu solución", "We design your solution")}
+            </div>
+          </div>
+
+          {/* Puntos de confianza */}
+          <div className="contact-trust">
+            <div className="contact-trust-item">
+              <span className="trust-icon">⚡</span>
+              <p>{getText("Respuesta en menos de 24 horas hábiles", "Response within 24 business hours")}</p>
+            </div>
+            <div className="contact-trust-item">
+              <span className="trust-icon">🎯</span>
+              <p>{getText("Presupuesto personalizado, sin costos ocultos", "Custom quote, no hidden costs")}</p>
+            </div>
+            <div className="contact-trust-item">
+              <span className="trust-icon">🤝</span>
+              <p>{getText("Acompañamiento desde la idea hasta la implementación", "Support from idea to implementation")}</p>
+            </div>
+          </div>
+
           <div className="contact-info">
-            <h3>{getText("Información de Contacto", "Contact Information")}</h3>
+            <h3>{getText("Escribinos directamente", "Write to us directly")}</h3>
+
+            {/* CTA principal WhatsApp */}
+            <div className="contact-main-cta">
+              <a
+                href={WA_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-whatsapp"
+              >
+                💬 {getText("Escribirnos por WhatsApp", "Message us on WhatsApp")}
+              </a>
+              <span className="contact-or">
+                {getText("o usá los canales de abajo", "or use the channels below")}
+              </span>
+            </div>
+
             <div className="info-item">
               <span className="info-icon">📧</span>
               <a href="mailto:cattechfuture@gmail.com">cattechfuture@gmail.com</a>
             </div>
             <div className="info-item">
-              <span className="info-icon">📱</span>
-              <a href="tel:+543834324087">+543834324087</a>
+              <span className="info-icon">💬</span>
+              <a href={WA_URL} target="_blank" rel="noopener noreferrer">
+                WhatsApp: +54 383 432-4087
+              </a>
             </div>
             <div className="info-item">
               <span className="info-icon">📍</span>
               <a href="https://maps.app.goo.gl/G4Ea8fKcDmG3rLG8A" target="_blank" rel="noopener noreferrer">
-                Catamarca, Argentina
+                {getText(
+                  "Catamarca — Atendemos Tucumán, Stgo. del Estero, La Rioja y Córdoba",
+                  "Catamarca — We serve Tucumán, Santiago del Estero, La Rioja and Córdoba"
+                )}
               </a>
             </div>
             <div className="info-item">
@@ -641,6 +743,17 @@ const App = () => {
           </div>
         </div>
       </footer>
+
+      {/* WhatsApp Floating Button */}
+      <a
+        id="whatsapp-float"
+        href={WA_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={getText("Contactar por WhatsApp", "Contact via WhatsApp")}
+      >
+        💬
+      </a>
 
       {/* Scroll to top button */}
       {showScrollTop && (
@@ -711,12 +824,14 @@ const App = () => {
                 >
                   {getText("🌐 Ver Demo del Sistema", "🌐 View System Demo")}
                 </a>
-                <a 
-                  href="#contact" 
-                  onClick={closeCropModal}
-                  className="btn btn-outline btn-large"
+                <a
+                  href={WA_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-whatsapp btn-large"
+                  style={{ justifyContent: 'center' }}
                 >
-                  {getText("📧 Contactar para más información", "📧 Contact for more information")}
+                  {getText("💬 Consultar por WhatsApp", "💬 Ask on WhatsApp")}
                 </a>
               </div>
 

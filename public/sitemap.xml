@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Página principal en español (default) -->
+  <url>
+    <loc>https://cattechfuture.com/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://cattechfuture.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cattechfuture.com/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://cattechfuture.com/"/>
+    <lastmod>2026-03-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Sección: Sobre Nosotros -->
+  <url>
+    <loc>https://cattechfuture.com/#about</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://cattechfuture.com/#about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cattechfuture.com/?lang=en#about"/>
+    <lastmod>2026-03-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Sección: Servicios -->
+  <url>
+    <loc>https://cattechfuture.com/#services</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://cattechfuture.com/#services"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cattechfuture.com/?lang=en#services"/>
+    <lastmod>2026-03-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Sección: Portfolio -->
+  <url>
+    <loc>https://cattechfuture.com/#portfolio</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://cattechfuture.com/#portfolio"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cattechfuture.com/?lang=en#portfolio"/>
+    <lastmod>2026-03-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Sección: Tecnologías -->
+  <url>
+    <loc>https://cattechfuture.com/#technologies</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://cattechfuture.com/#technologies"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cattechfuture.com/?lang=en#technologies"/>
+    <lastmod>2026-03-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Sección: Contacto -->
+  <url>
+    <loc>https://cattechfuture.com/#contact</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://cattechfuture.com/#contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://cattechfuture.com/?lang=en#contact"/>
+    <lastmod>2026-03-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+</urlset>

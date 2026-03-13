@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://cattechfuture.com/sitemap.xml
+
+# Bloquear archivos de build innecesarios
+Disallow: /src/
+Disallow: /.bolt/
