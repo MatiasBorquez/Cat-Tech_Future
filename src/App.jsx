@@ -152,8 +152,8 @@ const App = () => {
             </p>
             <p className="hero-subcta">
               {getText(
-                "✓ Consulta gratuita sin compromiso — Respondemos en menos de 24 horas",
-                "✓ Free consultation with no commitment — We respond within 24 hours"
+                "Consulta gratuita sin compromiso — Respondemos en menos de 24 horas",
+                "Free consultation with no commitment — We respond within 24 hours"
               )}
             </p>
             <div className="hero-buttons">
@@ -185,7 +185,6 @@ const App = () => {
             )}</p>
             <div className="about-grid">
               <div className="about-card">
-                <div className="card-icon">🎯</div>
                 <h3>{getText("Nuestro Enfoque", "Our Approach")}</h3>
                 <p>{getText(
                   "Desarrollamos soluciones end-to-end que integran hardware IoT, software personalizado y análisis de datos para impulsar la transformación digital de tu negocio con un fuerte compromiso ambiental.",
@@ -193,7 +192,6 @@ const App = () => {
                 )}</p>
               </div>
               <div className="about-card">
-                <div className="card-icon">👥</div>
                 <h3>{getText("Equipo Experto", "Expert Team")}</h3>
                 <p>{getText(
                   "Ingenieros especializados en desarrollo de hardware IoT, arquitectura de software, ciencia de datos e inteligencia artificial trabajando en conjunto para crear el futuro tecnológico del norte argentino.",
@@ -201,7 +199,6 @@ const App = () => {
                 )}</p>
               </div>
               <div className="about-card">
-                <div className="card-icon">🚀</div>
                 <h3>{getText("Innovación Continua", "Continuous Innovation")}</h3>
                 <p>{getText(
                   "Utilizamos las últimas tecnologías en automatización, control, machine learning e integración de LLMs para crear soluciones de vanguardia que impulsen el desarrollo regional.",
@@ -209,7 +206,6 @@ const App = () => {
                 )}</p>
               </div>
               <div className="about-card">
-                <div className="card-icon">🤝</div>
                 <h3>{getText("Compromiso", "Commitment")}</h3>
                 <p>{getText(
                   "Nos comprometemos con la calidad, eficiencia, escalabilidad y sustentabilidad de cada proyecto, creando empleo tecnológico local para retener talento en la región.",
@@ -241,7 +237,6 @@ const App = () => {
           </p>
           <div className="services-grid">
             <div className="service-card">
-              <div className="service-icon">🔧</div>
               <h3>{getText("Desarrollo de Hardware IoT", "IoT Hardware Development")}</h3>
               <p>{getText(
                 "Diseño y fabricación de dispositivos IoT personalizados para automatización y control. Sensores, actuadores y sistemas embebidos con conectividad en tiempo real.",
@@ -250,7 +245,6 @@ const App = () => {
               <a href="#contact" className="service-cta">{getText("Consultar sin compromiso", "Ask without commitment")}</a>
             </div>
             <div className="service-card">
-              <div className="service-icon">💻</div>
               <h3>{getText("Desarrollo de Software", "Software Development")}</h3>
               <p>{getText(
                 "Aplicaciones web escalables, APIs RESTful, dashboards interactivos y diseño de bases de datos robustas. Soluciones personalizadas para tu negocio.",
@@ -259,7 +253,6 @@ const App = () => {
               <a href="#contact" className="service-cta">{getText("Consultar sin compromiso", "Ask without commitment")}</a>
             </div>
             <div className="service-card">
-              <div className="service-icon">📊</div>
               <h3>{getText("Análisis y Ciencia de Datos", "Data Analysis & Science")}</h3>
               <p>{getText(
                 "Análisis predictivo, modelos de Machine Learning, pipelines ETL, visualización avanzada y consultoría en ciencia de datos para decisiones estratégicas.",
@@ -268,7 +261,6 @@ const App = () => {
               <a href="#contact" className="service-cta">{getText("Consultar sin compromiso", "Ask without commitment")}</a>
             </div>
             <div className="service-card">
-              <div className="service-icon">⚙️</div>
               <h3>{getText("Automatización y Control", "Automation & Control")}</h3>
               <p>{getText(
                 "Sistemas de control industrial, automatización de procesos, monitoreo remoto y control en tiempo real para optimizar operaciones.",
@@ -277,7 +269,6 @@ const App = () => {
               <a href="#contact" className="service-cta">{getText("Consultar sin compromiso", "Ask without commitment")}</a>
             </div>
             <div className="service-card">
-              <div className="service-icon">🤖</div>
               <h3>{getText("Inteligencia Artificial", "Artificial Intelligence")}</h3>
               <p>{getText(
                 "Implementación de modelos de IA con TensorFlow y PyTorch, integración de LLMs y soluciones de aprendizaje automático personalizadas.",
@@ -286,7 +277,6 @@ const App = () => {
               <a href="#contact" className="service-cta">{getText("Consultar sin compromiso", "Ask without commitment")}</a>
             </div>
             <div className="service-card">
-              <div className="service-icon">🎯</div>
               <h3>{getText("Consultoría Tecnológica", "Technology Consulting")}</h3>
               <p>{getText(
                 "Asesoramiento en transformación digital, arquitectura de soluciones, selección de tecnologías y estrategia de implementación.",
@@ -312,10 +302,7 @@ const App = () => {
           
           <div className="tech-grid">
             <div className="tech-category">
-              <h3>
-                <span className="tech-icon">⚡</span>
-                {getText("Hardware & Embebidos", "Hardware & Embedded")}
-              </h3>
+              <h3>{getText("Hardware & Embebidos", "Hardware & Embedded")}</h3>
               <div className="tech-list">
                 <span className="tech-item">C/C++</span>
                 <span className="tech-item">Raspberry Pi</span>
@@ -325,10 +312,7 @@ const App = () => {
             </div>
 
             <div className="tech-category">
-              <h3>
-                <span className="tech-icon">💻</span>
-                {getText("Desarrollo Backend", "Backend Development")}
-              </h3>
+              <h3>{getText("Desarrollo Backend", "Backend Development")}</h3>
               <div className="tech-list">
                 <span className="tech-item">Python</span>
                 <span className="tech-item">Flask</span>
@@ -338,10 +322,7 @@ const App = () => {
             </div>
 
             <div className="tech-category">
-              <h3>
-                <span className="tech-icon">🎨</span>
-                {getText("Desarrollo Frontend", "Frontend Development")}
-              </h3>
+              <h3>{getText("Desarrollo Frontend", "Frontend Development")}</h3>
               <div className="tech-list">
                 <span className="tech-item">React</span>
                 <span className="tech-item">JavaScript</span>
@@ -351,10 +332,7 @@ const App = () => {
             </div>
 
             <div className="tech-category">
-              <h3>
-                <span className="tech-icon">🤖</span>
-                {getText("IA & Machine Learning", "AI & Machine Learning")}
-              </h3>
+              <h3>{getText("IA & Machine Learning", "AI & Machine Learning")}</h3>
               <div className="tech-list">
                 <span className="tech-item">TensorFlow</span>
                 <span className="tech-item">PyTorch</span>
@@ -364,10 +342,7 @@ const App = () => {
             </div>
 
             <div className="tech-category">
-              <h3>
-                <span className="tech-icon">📊</span>
-                {getText("Análisis de Datos", "Data Analysis")}
-              </h3>
+              <h3>{getText("Análisis de Datos", "Data Analysis")}</h3>
               <div className="tech-list">
                 <span className="tech-item">Pandas</span>
                 <span className="tech-item">NumPy</span>
@@ -380,10 +355,7 @@ const App = () => {
             </div>
 
             <div className="tech-category">
-              <h3>
-                <span className="tech-icon">🔧</span>
-                {getText("DevOps & Tools", "DevOps & Tools")}
-              </h3>
+              <h3>{getText("DevOps & Tools", "DevOps & Tools")}</h3>
               <div className="tech-list">
                 <span className="tech-item">Docker</span>
                 <span className="tech-item">Git</span>
@@ -500,7 +472,6 @@ const App = () => {
           <div className="section-line"></div>
           <div className="sectors-grid">
             <div className="sector-card">
-              <div className="sector-icon">🏭</div>
               <h3>{getText("Industria", "Industry")}</h3>
               <p>{getText(
                 "Automatización de procesos, control de calidad, monitoreo de producción y análisis predictivo para manufactura y producción industrial.",
@@ -508,7 +479,6 @@ const App = () => {
               )}</p>
             </div>
             <div className="sector-card">
-              <div className="sector-icon">🏪</div>
               <h3>{getText("Retail & PyMEs", "Retail & SMEs")}</h3>
               <p>{getText(
                 "Sistemas de gestión, análisis de ventas, dashboards ejecutivos, automatización de inventarios y soluciones de e-commerce para pequeñas y medianas empresas.",
@@ -516,7 +486,6 @@ const App = () => {
               )}</p>
             </div>
             <div className="sector-card">
-              <div className="sector-icon">🏛️</div>
               <h3>{getText("Gobierno", "Government")}</h3>
               <p>{getText(
                 "Sistemas de monitoreo urbano, gestión de recursos públicos, análisis de datos para toma de decisiones y soluciones IoT para ciudades inteligentes.",
@@ -584,7 +553,6 @@ const App = () => {
           <div className="section-line"></div>
           <div className="vision-content">
             <div className="vision-main">
-              <div className="vision-icon">🌟</div>
               <h3>{getText("Modernización Tecnológica del Norte Argentino", "Technological Modernization of Northern Argentina")}</h3>
               <p>{getText(
                 "Nuestra misión es transformar el norte argentino en un polo de innovación tecnológica. Creemos que la tecnología global debe estar al alcance de todos, sin importar la ubicación geográfica. El norte argentino se destaca por su gran potencial pero sufre de baja adopción tecnológica y escasas oportunidades de empleo en el sector tech, lo que obliga a muchos ingenieros y profesionales a abandonar la región para poder trabajar en su especialidad.",
@@ -598,7 +566,6 @@ const App = () => {
             
             <div className="vision-grid">
               <div className="vision-card">
-                <div className="vision-card-icon">🌍</div>
                 <h4>{getText("Impacto Regional", "Regional Impact")}</h4>
                 <p>{getText(
                   "Crear oportunidades de empleo tecnológico en Catamarca y expandir soluciones hacia Tucumán, Santiago del Estero, La Rioja y Córdoba, reteniendo talento local en la región.",
@@ -607,7 +574,6 @@ const App = () => {
               </div>
               
               <div className="vision-card">
-                <div className="vision-card-icon">♻️</div>
                 <h4>{getText("Sustentabilidad", "Sustainability")}</h4>
                 <p>{getText(
                   "Todas nuestras soluciones están diseñadas con un fuerte compromiso ambiental, contribuyendo activamente al cumplimiento de los Objetivos de Desarrollo Sostenible (ODS).",
@@ -616,7 +582,6 @@ const App = () => {
               </div>
               
               <div className="vision-card">
-                <div className="vision-card-icon">🚀</div>
                 <h4>{getText("Innovación sin Fronteras", "Innovation without Borders")}</h4>
                 <p>{getText(
                   "Demostramos que la ubicación geográfica no limita la capacidad de innovar. Desarrollamos soluciones de nivel global desde el corazón del norte argentino.",
@@ -643,17 +608,14 @@ const App = () => {
           {/* Proceso de contacto */}
           <div className="contact-process">
             <div className="contact-process-step">
-              <span className="step-icon">💬</span>
               {getText("Contanos tu proyecto", "Tell us your project")}
             </div>
             <span className="contact-process-arrow">→</span>
             <div className="contact-process-step">
-              <span className="step-icon">🎁</span>
               {getText("Consulta gratuita", "Free consultation")}
             </div>
             <span className="contact-process-arrow">→</span>
             <div className="contact-process-step">
-              <span className="step-icon">🚀</span>
               {getText("Diseñamos tu solución", "We design your solution")}
             </div>
           </div>
@@ -661,15 +623,12 @@ const App = () => {
           {/* Puntos de confianza */}
           <div className="contact-trust">
             <div className="contact-trust-item">
-              <span className="trust-icon">⚡</span>
               <p>{getText("Respuesta en menos de 24 horas hábiles", "Response within 24 business hours")}</p>
             </div>
             <div className="contact-trust-item">
-              <span className="trust-icon">🎯</span>
               <p>{getText("Presupuesto personalizado, sin costos ocultos", "Custom quote, no hidden costs")}</p>
             </div>
             <div className="contact-trust-item">
-              <span className="trust-icon">🤝</span>
               <p>{getText("Acompañamiento desde la idea hasta la implementación", "Support from idea to implementation")}</p>
             </div>
           </div>
@@ -801,17 +760,17 @@ const App = () => {
               </div>
 
               <div className="modal-section highlight">
-                <h3>✨ {getText("Oferta para Primeros Adoptadores", "Early Adopter Offer")}</h3>
+                <h3>{getText("Oferta para Primeros Adoptadores", "Early Adopter Offer")}</h3>
                 <p>{getText(
                   "Si estás interesado en ser uno de nuestros primeros clientes, ofrecemos beneficios exclusivos:",
                   "If you are interested in being one of our first customers, we offer exclusive benefits:"
                 )}</p>
                 <ul className="benefits-list">
-                  <li>🎯 {getText("Descuentos especiales en la adquisición del sistema", "Special discounts on system acquisition")}</li>
-                  <li>🔄 {getText("Actualizaciones gratuitas de software y firmware", "Free software and firmware updates")}</li>
-                  <li>🧪 {getText("Período de prueba del servicio y producto sin costo", "Free service and product trial period")}</li>
-                  <li>🤝 {getText("Soporte técnico prioritario", "Priority technical support")}</li>
-                  <li>📊 {getText("Participación en el desarrollo de nuevas funcionalidades", "Participation in new feature development")}</li>
+                  <li>{getText("Descuentos especiales en la adquisición del sistema", "Special discounts on system acquisition")}</li>
+                  <li>{getText("Actualizaciones gratuitas de software y firmware", "Free software and firmware updates")}</li>
+                  <li>{getText("Período de prueba del servicio y producto sin costo", "Free service and product trial period")}</li>
+                  <li>{getText("Soporte técnico prioritario", "Priority technical support")}</li>
+                  <li>{getText("Participación en el desarrollo de nuevas funcionalidades", "Participation in new feature development")}</li>
                 </ul>
               </div>
 
@@ -822,7 +781,7 @@ const App = () => {
                   rel="noopener noreferrer"
                   className="btn btn-primary btn-large"
                 >
-                  {getText("🌐 Ver Demo del Sistema", "🌐 View System Demo")}
+                  {getText("Ver Demo del Sistema", "View System Demo")}
                 </a>
                 <a
                   href={WA_URL}
