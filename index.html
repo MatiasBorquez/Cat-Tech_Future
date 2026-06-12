@@ -5,12 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- ===================== PRIMARY SEO ===================== -->
-  <title>Cat-Tech Future | IoT, Datos e IA — Catamarca, Tucumán, Santiago del Estero, La Rioja, Córdoba</title>
+  <title>Cat-Tech Future | Automatización IoT, Software e IA en Catamarca y el NOA</title>
   <meta name="description" content="Cat-Tech Future: empresa tecnológica en Catamarca que presta servicios en Tucumán, Santiago del Estero, La Rioja y Córdoba. Automatización IoT, análisis de datos, ciencia de datos e inteligencia artificial para industrias, PyMEs y gobierno. Consulta gratuita sin compromiso.">
   <meta name="keywords" content="automatización IoT, análisis de datos, ciencia de datos, inteligencia artificial, hardware IoT, ESP32, machine learning, industria 4.0, Catamarca, Tucumán, Santiago del Estero, La Rioja, Córdoba, norte argentino, transformación digital, sistemas embebidos, dashboards, sensores industriales, presupuesto personalizado IoT, consulta gratuita tecnología">
   <meta name="author" content="Cat-Tech Future">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-  <meta name="theme-color" content="#00d4ff">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="geo.region" content="AR-K">
+  <meta name="geo.placename" content="San Fernando del Valle de Catamarca">
+  <meta name="geo.position" content="-28.4696;-65.7852">
+  <meta name="ICBM" content="-28.4696, -65.7852">
 
   <!-- ===================== CANONICAL & HREFLANG ===================== -->
   <link rel="canonical" href="https://cattechfuture.com/">
@@ -40,6 +44,7 @@
 
   <!-- ===================== WEB APP MANIFEST & FAVICON ===================== -->
   <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -188,12 +193,69 @@
   }
   </script>
 
-  <!-- ===================== PERFORMANCE HINTS ===================== -->
+  <!-- ===================== FAQ STRUCTURED DATA ===================== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Cuánto cuesta desarrollar un proyecto con Cat-Tech Future?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Cada proyecto es único, por eso no manejamos precios fijos. Analizamos tu necesidad en una consulta gratuita sin compromiso y entregamos un presupuesto personalizado, sin costos ocultos."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Trabajan solo en Catamarca?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Nuestra base está en Catamarca, pero prestamos servicios en Tucumán, Santiago del Estero, La Rioja y Córdoba. También trabajamos de forma remota para proyectos de software y datos en cualquier parte de Argentina."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué tipo de proyectos desarrollan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Desarrollamos soluciones de hardware IoT (sensores, automatización, control), software a medida (aplicaciones web, APIs, dashboards), análisis y ciencia de datos, e inteligencia artificial aplicada a industria, agro, comercio y gobierno."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuánto tarda un proyecto en estar listo?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Depende del alcance, pero trabajamos con metodologías ágiles y entregas incrementales: un MVP funcional puede estar listo en pocas semanas."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Ofrecen soporte después de la entrega?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí. Brindamos soporte técnico continuo, actualizaciones y mejoras, además de capacitación para que tu equipo pueda operar la solución con autonomía."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- ===================== FONTS & PERFORMANCE HINTS ===================== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="dns-prefetch" href="https://maps.app.goo.gl">
 </head>
 <body>
   <div id="root"></div>
+  <noscript>
+    <h1>Cat-Tech Future — Automatización IoT, Software e Inteligencia Artificial</h1>
+    <p>Empresa tecnológica en Catamarca, Argentina. Desarrollamos hardware IoT, software a medida, análisis de datos e IA para industrias, PyMEs y gobierno en Catamarca, Tucumán, Santiago del Estero, La Rioja y Córdoba.</p>
+    <p>Contacto: <a href="mailto:cattechfuture@gmail.com">cattechfuture@gmail.com</a> — WhatsApp: +54 383 432-4087</p>
+  </noscript>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
