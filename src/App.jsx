@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { gallery, galleryCategories, pcbImages } from './data/gallery';
+import AppScreen from './components/AppScreen';
 
 const svgProps = {
   width: 22,
@@ -92,7 +94,51 @@ const Icons = {
   chevron: (
     <svg {...svgProps}><polyline points="6 9 12 15 18 9" /></svg>
   ),
+  chevronLeft: (
+    <svg {...svgProps}><polyline points="15 18 9 12 15 6" /></svg>
+  ),
+  chevronRight: (
+    <svg {...svgProps}><polyline points="9 18 15 12 9 6" /></svg>
+  ),
+  home: (
+    <svg {...svgProps}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+  ),
+  store: (
+    <svg {...svgProps}><path d="M3 9l1.5-5h15L21 9" /><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0" /><path d="M5 12v9h14v-9" /><rect x="9" y="15" width="6" height="6" /></svg>
+  ),
+  factory: (
+    <svg {...svgProps}><path d="M2 20V9l6 4V9l6 4V4h4l2 16z" /><line x1="2" y1="20" x2="22" y2="20" /></svg>
+  ),
+  sprout: (
+    <svg {...svgProps}><path d="M7 20h10" /><path d="M12 20v-8" /><path d="M12 12c0-4-3-6-7-6 0 4 3 6 7 6z" /><path d="M12 10c0-3.5 2.5-6 7-6 0 4-2.5 6-7 6" /></svg>
+  ),
+  bell: (
+    <svg {...svgProps}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
+  ),
+  smartphone: (
+    <svg {...svgProps}><rect x="5" y="2" width="14" height="20" rx="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></svg>
+  ),
+  clock: (
+    <svg {...svgProps}><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+  ),
+  trendingDown: (
+    <svg {...svgProps}><polyline points="23 18 13.5 8.5 8.5 13.5 1 6" /><polyline points="17 18 23 18 23 12" /></svg>
+  ),
+  image: (
+    <svg {...svgProps}><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
+  ),
+  maximize: (
+    <svg {...svgProps}><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></svg>
+  ),
+  external: (
+    <svg {...svgProps}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
+  ),
 };
+
+const WA_NUMBER = "543834324087";
+const waLink = (text) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
+const DEMO_URL = "https://app.cattechfuture.com";
+const IMG = "/images/proyectos";
 
 const App = () => {
   const [currentTheme, setCurrentTheme] = useState('light');
@@ -101,6 +147,9 @@ const App = () => {
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showCropModal, setShowCropModal] = useState(false);
+  const [galleryFilter, setGalleryFilter] = useState('all');
+  const [lightbox, setLightbox] = useState(null); // { items, index }
+  const [pcbView, setPcbView] = useState(0);
 
   // Initialize theme and language
   useEffect(() => {
@@ -124,9 +173,9 @@ const App = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Reveal-on-scroll animations
+  // Reveal-on-scroll animations (re-run when the gallery filter changes the rendered tiles)
   useEffect(() => {
-    const els = document.querySelectorAll('.reveal');
+    const els = document.querySelectorAll('.reveal:not(.visible)');
     if (!('IntersectionObserver' in window)) {
       els.forEach((el) => el.classList.add('visible'));
       return;
@@ -144,16 +193,44 @@ const App = () => {
     );
     els.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [galleryFilter]);
 
-  // Prevent body scroll when modal is open
+  const overlayOpen = showCropModal || lightbox !== null;
+
+  // Prevent body scroll when a modal or the lightbox is open
   useEffect(() => {
-    if (showCropModal) {
+    if (overlayOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-  }, [showCropModal]);
+  }, [overlayOpen]);
+
+  const galleryItems = galleryFilter === 'all'
+    ? gallery
+    : gallery.filter((item) => item.category === galleryFilter);
+  const galleryPhotos = galleryItems.filter((item) => item.src);
+
+  const stepLightbox = (dir) => {
+    setLightbox((lb) => lb && { ...lb, index: (lb.index + dir + lb.items.length) % lb.items.length });
+  };
+
+  // Keyboard controls for modal and lightbox
+  useEffect(() => {
+    if (!overlayOpen) return;
+    const handleKey = (e) => {
+      if (e.key === 'Escape') {
+        setShowCropModal(false);
+        setLightbox(null);
+      } else if (e.key === 'ArrowRight') {
+        stepLightbox(1);
+      } else if (e.key === 'ArrowLeft') {
+        stepLightbox(-1);
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [overlayOpen]);
 
   const toggleTheme = () => {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -189,93 +266,287 @@ const App = () => {
     setShowCropModal(false);
   };
 
-  const WA_URL = "https://wa.me/543834324087?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20sus%20servicios";
+  const openLightbox = (items, item) => {
+    setLightbox({ items, index: items.indexOf(item) });
+  };
 
-  const services = [
+  const WA_URL = waLink(getText(
+    "Hola, me interesa conocer más sobre sus servicios",
+    "Hi, I'd like to know more about your services"
+  ));
+
+  const navItems = [
+    { href: '#soluciones', label: ["Soluciones", "Solutions"] },
+    { href: '#ahorro', label: ["Ahorro", "Savings"] },
+    { href: '#services', label: ["Servicios", "Services"] },
+    { href: '#proyectos', label: ["Proyectos", "Projects"] },
+  ];
+
+  const audiences = [
     {
-      icon: Icons.cpu,
-      title: ["Desarrollo de Hardware IoT", "IoT Hardware Development"],
+      icon: Icons.home,
+      title: ["Hogares", "Homes"],
+      tagline: [
+        "Domótica para tu casa: comodidad, seguridad y menos gastos.",
+        "Home automation: comfort, security and lower bills.",
+      ],
+      items: [
+        ["Riego automático de jardín y huerta", "Automatic garden and vegetable-patch irrigation"],
+        ["Luces y enchufes desde el celular", "Lights and outlets from your phone"],
+        ["Sensores de seguridad y alertas", "Security sensors and alerts"],
+        ["Control de consumo, tanque y bomba", "Power usage, water tank and pump control"],
+      ],
+      wa: ["Hola, me interesa automatizar mi hogar", "Hi, I'm interested in automating my home"],
+    },
+    {
+      icon: Icons.store,
+      title: ["PyMEs y comercios", "Small businesses"],
+      tagline: [
+        "Sabé qué pasa en tu negocio aunque no estés.",
+        "Know what's happening in your business even when you're away.",
+      ],
+      items: [
+        ["Monitoreo de heladeras, cámaras de frío y equipos", "Fridge, cold room and equipment monitoring"],
+        ["Alertas al celular ante fallas o cortes", "Phone alerts on failures or outages"],
+        ["Automatización de tareas repetitivas", "Automation of repetitive tasks"],
+        ["Tableros con tus datos para decidir mejor", "Dashboards with your data for better decisions"],
+      ],
+      wa: ["Hola, tengo una PyME y me interesa automatizar", "Hi, I run a small business and want to automate"],
+    },
+    {
+      icon: Icons.factory,
+      title: ["Industrias", "Industry"],
+      tagline: [
+        "Procesos más eficientes y medidos en tiempo real.",
+        "More efficient processes, measured in real time.",
+      ],
+      items: [
+        ["Automatización y control de procesos", "Process automation and control"],
+        ["Telemetría de máquinas y sensores industriales", "Machine telemetry and industrial sensors"],
+        ["Registro histórico y reportes de consumo", "History logs and consumption reports"],
+        ["Mantenimiento predictivo con datos e IA", "Predictive maintenance with data and AI"],
+      ],
+      wa: ["Hola, me interesa automatizar un proceso industrial", "Hi, I'd like to automate an industrial process"],
+    },
+    {
+      icon: Icons.sprout,
+      title: ["Productores", "Growers"],
+      tagline: [
+        "Regá lo justo y cuidá tu cultivo desde cualquier lugar.",
+        "Water just what's needed and watch your crop from anywhere.",
+      ],
+      items: [
+        ["Riego según la humedad real del suelo", "Irrigation based on actual soil moisture"],
+        ["Control de invernaderos y clima", "Greenhouse and climate control"],
+        ["Monitoreo de suelo, temperatura y agua", "Soil, temperature and water monitoring"],
+        ["Control de bombas a distancia", "Remote pump control"],
+      ],
+      wa: ["Hola, soy productor y me interesa automatizar el riego", "Hi, I'm a grower and want to automate irrigation"],
+    },
+  ];
+
+  const benefits = [
+    {
+      icon: Icons.droplet,
+      figure: ["hasta 30%*", "up to 30%*"],
+      title: ["Menos agua", "Less water"],
       text: [
-        "Diseño y fabricación de dispositivos IoT personalizados para automatización y control. Sensores, actuadores y sistemas embebidos con conectividad en tiempo real.",
-        "Design and manufacturing of custom IoT devices for automation and control. Sensors, actuators and embedded systems with real-time connectivity.",
+        "Se riega solo cuando el suelo lo necesita, no por reloj. Si llovió, el sistema lo detecta y no riega.",
+        "Watering happens only when the soil needs it, not on a timer. If it rained, the system detects it and skips.",
       ],
     },
     {
-      icon: Icons.code,
-      title: ["Desarrollo de Software", "Software Development"],
+      icon: Icons.zap,
+      figure: ["hasta 40%*", "up to 40%*"],
+      title: ["Menos energía", "Less energy"],
       text: [
-        "Aplicaciones web escalables, APIs RESTful, dashboards interactivos y diseño de bases de datos robustas. Soluciones personalizadas para tu negocio.",
-        "Scalable web applications, RESTful APIs, interactive dashboards and robust database design. Custom solutions for your business.",
+        "Bombas, luces y equipos funcionan el tiempo justo. Se terminan los encendidos innecesarios.",
+        "Pumps, lights and equipment run just as long as needed. No more unnecessary run time.",
       ],
     },
     {
-      icon: Icons.chart,
-      title: ["Análisis y Ciencia de Datos", "Data Analysis & Science"],
+      icon: Icons.clock,
+      figure: ["Menos viajes", "Fewer trips"],
+      title: ["Más tiempo libre", "More free time"],
       text: [
-        "Análisis predictivo, modelos de Machine Learning, pipelines ETL, visualización avanzada y consultoría en ciencia de datos para decisiones estratégicas.",
-        "Predictive analysis, Machine Learning models, ETL pipelines, advanced visualization and data science consulting for strategic decisions.",
+        "No hace falta ir hasta el lugar para prender, apagar o revisar. Lo hacés desde el celular.",
+        "No need to travel on site to switch on, off or check. You do it from your phone.",
       ],
     },
     {
-      icon: Icons.sliders,
-      title: ["Automatización y Control", "Automation & Control"],
+      icon: Icons.bell,
+      figure: ["24/7", "24/7"],
+      title: ["Control y tranquilidad", "Control and peace of mind"],
       text: [
-        "Sistemas de control industrial, automatización de procesos, monitoreo remoto y control en tiempo real para optimizar operaciones.",
-        "Industrial control systems, process automation, remote monitoring and real-time control to optimize operations.",
-      ],
-    },
-    {
-      icon: Icons.sparkles,
-      title: ["Inteligencia Artificial", "Artificial Intelligence"],
-      text: [
-        "Implementación de modelos de IA con TensorFlow y PyTorch, integración de LLMs y soluciones de aprendizaje automático personalizadas.",
-        "Implementation of AI models with TensorFlow and PyTorch, LLM integration and custom machine learning solutions.",
-      ],
-    },
-    {
-      icon: Icons.lightbulb,
-      title: ["Consultoría Tecnológica", "Technology Consulting"],
-      text: [
-        "Asesoramiento en transformación digital, arquitectura de soluciones, selección de tecnologías y estrategia de implementación.",
-        "Advisory in digital transformation, solution architecture, technology selection and implementation strategy.",
+        "Ves qué pasa en todo momento y recibís alertas si algo sale de lo normal, antes de que sea un problema.",
+        "See what's happening at all times and get alerts when something is off, before it becomes a problem.",
       ],
     },
   ];
 
+  const services = [
+    {
+      icon: Icons.home,
+      title: ["Automatización y Domótica", "Automation & Smart Home"],
+      text: [
+        "Riego, iluminación, bombas, portones y equipos que funcionan solos y se controlan desde el celular. Para hogares, comercios y campos.",
+        "Irrigation, lighting, pumps, gates and equipment that run on their own and are controlled from your phone. For homes, shops and farms.",
+      ],
+    },
+    {
+      icon: Icons.bell,
+      title: ["Monitoreo Remoto y Alertas", "Remote Monitoring & Alerts"],
+      text: [
+        "Sensores de humedad, temperatura, nivel, consumo y más, con lecturas en tiempo real, historial y avisos al instante.",
+        "Moisture, temperature, level, power and other sensors, with real-time readings, history and instant alerts.",
+      ],
+    },
+    {
+      icon: Icons.cpu,
+      title: ["Hardware y Placas a Medida", "Custom Hardware & Boards"],
+      text: [
+        "Diseñamos y armamos nuestros propios controladores y placas electrónicas (ESP32, RS-485, relés industriales) pensados para durar en el campo.",
+        "We design and build our own controllers and circuit boards (ESP32, RS-485, industrial relays) made to last in the field.",
+      ],
+    },
+    {
+      icon: Icons.smartphone,
+      title: ["Software y Paneles de Control", "Software & Control Panels"],
+      text: [
+        "Aplicaciones web y paneles simples de usar para ver tus datos, configurar tu sistema y administrar usuarios.",
+        "Easy-to-use web apps and panels to see your data, configure your system and manage users.",
+      ],
+    },
+    {
+      icon: Icons.sparkles,
+      title: ["Datos e Inteligencia Artificial", "Data & Artificial Intelligence"],
+      text: [
+        "Convertimos las mediciones en decisiones: reportes de consumo, predicciones y recomendaciones automáticas.",
+        "We turn measurements into decisions: consumption reports, predictions and automatic recommendations.",
+      ],
+    },
+    {
+      icon: Icons.lightbulb,
+      title: ["Consultoría Técnica", "Technical Consulting"],
+      text: [
+        "Relevamos tu instalación, analizamos dónde se pierde agua, energía o tiempo y te proponemos la solución adecuada. Servicio arancelado.",
+        "We survey your site, find where water, energy or time is being lost and propose the right solution. Paid service.",
+      ],
+    },
+  ];
+
+  const proposals = [
+    {
+      icon: Icons.droplet,
+      title: ["Riego inteligente para espacios verdes", "Smart irrigation for green spaces"],
+      text: [
+        "Diseñamos el reemplazo de los timers de riego de una plaza por un controlador ESP32 con sensor de humedad industrial, control individual de 5 bombas y gestión remota desde el celular o la web.",
+        "We designed the replacement of a plaza's irrigation timers with an ESP32 controller, an industrial moisture sensor, individual control of 5 pumps and remote management from phone or web.",
+      ],
+      points: [
+        ["Ahorro estimado: 30% de agua y 40% de energía", "Estimated savings: 30% water and 40% energy"],
+        ["Recupero estimado de la inversión: aprox. 1 año", "Estimated payback: approx. 1 year"],
+        ["Convive con el trabajo del personal de mantenimiento", "Works alongside maintenance staff"],
+      ],
+      tags: ["ESP32", "RS-485", "Relés industriales", "Portal web"],
+    },
+    {
+      icon: Icons.shield,
+      title: ["Disuasión inteligente de aves para canchas", "Smart bird deterrence for sports fields"],
+      text: [
+        "Sistema autónomo para proteger el césped durante la siembra: cámaras que detectan aves, láser verde de barrido y sonidos de alarma, con bloqueos de seguridad cuando hay personas en la cancha.",
+        "Autonomous system that protects turf during seeding: cameras that detect birds, a sweeping green laser and distress calls, with safety interlocks whenever people are on the field.",
+      ],
+      points: [
+        ["Reemplaza un gasto mensual recurrente (cetrería) por una inversión única", "Replaces a recurring monthly cost (falconry) with a one-time investment"],
+        ["Recupero estimado de la inversión: aprox. 9 meses frente al uso de aves rapaces", "Estimated payback: approx. 9 months compared with using birds of prey"],
+        ["Modular: se le puede sumar monitoreo y riego automático", "Modular: can add monitoring and automatic irrigation"],
+      ],
+      tags: ["Visión por cámara", "ESP32", "Raspberry Pi", "Seguridad por hardware"],
+    },
+  ];
+
+  const pcbSpecs = [
+    {
+      icon: Icons.cpu,
+      title: ["Cerebro ESP32", "ESP32 at the core"],
+      text: [
+        "WiFi y Bluetooth integrados para mandar los datos a la plataforma.",
+        "Built-in WiFi and Bluetooth to send data to the platform.",
+      ],
+    },
+    {
+      icon: Icons.zap,
+      title: ["Alimentación de 12 V", "12 V power input"],
+      text: [
+        "Fuente conmutada propia en la placa: eficiente y sin módulos externos.",
+        "On-board switching supply: efficient, no external modules.",
+      ],
+    },
+    {
+      icon: Icons.shield,
+      title: ["Entradas protegidas", "Protected inputs"],
+      text: [
+        "Filtro y diodo zener en la entrada de sensores para soportar el uso en campo.",
+        "Filtering and a zener diode on the sensor input to withstand field use.",
+      ],
+    },
+    {
+      icon: Icons.sliders,
+      title: ["Borneras y expansión", "Terminals & expansion"],
+      text: [
+        "Borneras a tornillo y conectores para sumar relés, RS-485 y más sensores.",
+        "Screw terminals and headers to add relays, RS-485 and more sensors.",
+      ],
+    },
+  ];
+
+  const techStack = [
+    "ESP32", "C/C++", "KiCad", "Raspberry Pi", "RS-485", "Python", "Flask", "PostgreSQL",
+    "TimescaleDB", "React", "Docker", "TensorFlow", "PyTorch", "Pandas", "LLMs",
+  ];
+
   const faqs = [
     {
-      q: ["¿Cuánto cuesta desarrollar un proyecto con ustedes?", "How much does it cost to develop a project with you?"],
+      q: ["¿La consulta tiene costo?", "Is the consultation free?"],
       a: [
-        "Cada proyecto es único, por eso no manejamos precios fijos. Analizamos tu necesidad en una consulta gratuita sin compromiso y te entregamos un presupuesto personalizado, sin costos ocultos.",
-        "Every project is unique, so we don't have fixed prices. We analyze your needs in a free, no-commitment consultation and deliver a personalized quote with no hidden costs.",
+        "El primer contacto por WhatsApp no tiene costo: nos contás brevemente qué necesitás y te orientamos. Si tu caso requiere un relevamiento o análisis técnico para diseñar la solución, coordinamos una consulta técnica, que es arancelada. Te informamos el valor por WhatsApp antes de agendarla.",
+        "The first WhatsApp contact is free: you briefly tell us what you need and we point you in the right direction. If your case requires a site survey or technical analysis to design the solution, we schedule a technical consultation, which is a paid service. We'll tell you the fee over WhatsApp before booking it.",
       ],
     },
     {
-      q: ["¿Trabajan solo en Catamarca?", "Do you only work in Catamarca?"],
+      q: ["¿Trabajan con casas particulares?", "Do you work with private homes?"],
       a: [
-        "No. Nuestra base está en Catamarca, pero prestamos servicios en Tucumán, Santiago del Estero, La Rioja y Córdoba. También trabajamos de forma remota para proyectos de software y datos en cualquier parte de Argentina.",
-        "No. We are based in Catamarca, but we serve Tucumán, Santiago del Estero, La Rioja and Córdoba. We also work remotely on software and data projects anywhere in Argentina.",
+        "Sí. Hacemos domótica para hogares: riego automático de jardín, control de luces y enchufes, sensores de seguridad con alertas, y monitoreo de consumo eléctrico, tanque de agua y bomba, todo desde el celular.",
+        "Yes. We do home automation: automatic garden irrigation, lights and outlet control, security sensors with alerts, and monitoring of power usage, water tank and pump — all from your phone.",
       ],
     },
     {
-      q: ["¿Qué tipo de proyectos desarrollan?", "What kind of projects do you develop?"],
+      q: ["¿Cuánto puedo ahorrar?", "How much can I save?"],
       a: [
-        "Desarrollamos soluciones de hardware IoT (sensores, automatización, control), software a medida (aplicaciones web, APIs, dashboards), análisis y ciencia de datos, e inteligencia artificial aplicada a industria, agro, comercio y gobierno.",
-        "We develop IoT hardware solutions (sensors, automation, control), custom software (web applications, APIs, dashboards), data analysis and data science, and artificial intelligence applied to industry, agriculture, retail and government.",
+        "Depende de cada instalación. En nuestros análisis técnicos para sistemas de riego estimamos ahorros de hasta 30% de agua y 40% de energía frente al riego por temporizador, con un recupero de la inversión de aproximadamente un año. En la consulta técnica calculamos una estimación para tu caso.",
+        "It depends on each installation. In our technical analyses for irrigation systems we estimate savings of up to 30% water and 40% energy compared with timer-based irrigation, with a payback of about one year. During the technical consultation we estimate it for your case.",
       ],
     },
     {
-      q: ["¿Cuánto tarda un proyecto en estar listo?", "How long does a project take?"],
+      q: ["¿Puedo ver un sistema funcionando?", "Can I see a system working?"],
       a: [
-        "Depende del alcance, pero trabajamos con metodologías ágiles y entregas incrementales: un MVP funcional puede estar listo en pocas semanas. Desde el primer día vas viendo avances concretos.",
-        "It depends on the scope, but we work with agile methodologies and incremental deliveries: a functional MVP can be ready in a few weeks. You see concrete progress from day one.",
+        "Sí. Nuestra plataforma de monitoreo está online en app.cattechfuture.com, con un usuario de prueba conectado a nuestra prueba piloto de riego: ves humedad del suelo, temperatura e historial en tiempo real.",
+        "Yes. Our monitoring platform is online at app.cattechfuture.com, with a demo user connected to our irrigation pilot: you can see soil moisture, temperature and history in real time.",
       ],
     },
     {
-      q: ["¿Ofrecen soporte después de la entrega?", "Do you offer support after delivery?"],
+      q: ["¿En qué zonas trabajan?", "Which areas do you cover?"],
       a: [
-        "Sí. Brindamos soporte técnico continuo, actualizaciones y mejoras, además de capacitación para que tu equipo pueda operar la solución con autonomía.",
-        "Yes. We provide ongoing technical support, updates and improvements, plus training so your team can operate the solution independently.",
+        "Nuestra base está en Catamarca y hacemos instalaciones en Tucumán, Santiago del Estero, La Rioja y Córdoba. Los proyectos de software y datos los hacemos de forma remota en todo el país.",
+        "We're based in Catamarca and install in Tucumán, Santiago del Estero, La Rioja and Córdoba. Software and data projects are done remotely nationwide.",
+      ],
+    },
+    {
+      q: ["¿Qué pasa después de la instalación?", "What happens after installation?"],
+      a: [
+        "Te capacitamos para usar el sistema, incluye garantía y soporte remoto, y podés sumar planes de monitoreo y mantenimiento. Además, el sistema es modular: se puede ampliar sin rehacer la inversión.",
+        "We train you to use the system, it includes a warranty and remote support, and you can add monitoring and maintenance plans. The system is modular, so it can grow without redoing the investment.",
       ],
     },
   ];
@@ -324,18 +595,11 @@ const App = () => {
               </button>
 
               <div className={`nav-links ${mobileMenuOpen ? 'active' : ''}`}>
-                <a href="#about" onClick={() => setMobileMenuOpen(false)}>
-                  {getText("Sobre Nosotros", "About Us")}
-                </a>
-                <a href="#services" onClick={() => setMobileMenuOpen(false)}>
-                  {getText("Servicios", "Services")}
-                </a>
-                <a href="#portfolio" onClick={() => setMobileMenuOpen(false)}>
-                  {getText("Portfolio", "Portfolio")}
-                </a>
-                <a href="#technologies" onClick={() => setMobileMenuOpen(false)}>
-                  {getText("Tecnologías", "Technologies")}
-                </a>
+                {navItems.map((item) => (
+                  <a key={item.href} href={item.href} onClick={() => setMobileMenuOpen(false)}>
+                    {getText(...item.label)}
+                  </a>
+                ))}
                 <a href="#contact" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>
                   {getText("Contacto", "Contact")}
                 </a>
@@ -355,44 +619,68 @@ const App = () => {
             <div className="hero-grid"></div>
           </div>
           <div className="container">
-            <div className="hero-content">
-              <span className="hero-badge">
-                {Icons.zap}
-                {getText(
-                  "Tecnología desde Catamarca para el norte argentino",
-                  "Technology from Catamarca for northern Argentina"
-                )}
-              </span>
-              <h1>
-                {getText("Tecnología Global para ", "Global Technology for ")}
-                <span className="gradient-text">
-                  {getText("Desafíos Locales", "Local Challenges")}
+            <div className="hero-layout">
+              <div className="hero-content">
+                <span className="hero-badge">
+                  {Icons.zap}
+                  {getText(
+                    "Automatización y domótica desde Catamarca",
+                    "Automation and smart home from Catamarca"
+                  )}
                 </span>
-              </h1>
-              <p>
-                {getText(
-                  "Llevamos la modernización tecnológica al norte argentino. Desarrollo de Hardware IoT, Software Personalizado y Análisis de Datos para transformar tu negocio.",
-                  "We bring technological modernization to northern Argentina. IoT Hardware Development, Custom Software and Data Analysis to transform your business."
-                )}
-              </p>
-              <p className="hero-subcta">
-                {getText(
-                  "Consulta gratuita sin compromiso — Respondemos en menos de 24 horas",
-                  "Free consultation with no commitment — We respond within 24 hours"
-                )}
-              </p>
-              <div className="hero-buttons">
-                <a href="#contact" className="btn btn-primary">
-                  {getText("Contáctanos", "Contact Us")}
-                </a>
-                <a href="#services" className="btn btn-outline">
-                  {getText("Conoce Nuestros Servicios", "Discover Our Services")}
-                </a>
+                <h1>
+                  {getText("Automatizá, ahorrá y controlá todo ", "Automate, save and control everything ")}
+                  <span className="gradient-text">
+                    {getText("desde tu celular", "from your phone")}
+                  </span>
+                </h1>
+                <p>
+                  {getText(
+                    "Diseñamos sistemas a medida para hogares, PyMEs, industrias y productores: riego inteligente, domótica, monitoreo y alertas en tiempo real. Menos desperdicio de agua y energía, y la tranquilidad de saber qué pasa en todo momento.",
+                    "We design custom systems for homes, small businesses, industry and growers: smart irrigation, home automation, real-time monitoring and alerts. Less wasted water and energy, and the peace of mind of knowing what's happening at all times."
+                  )}
+                </p>
+                <div className="hero-buttons">
+                  <a href={WA_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                    {getText("Escribinos por WhatsApp", "Message us on WhatsApp")}
+                  </a>
+                  <a href="#ahorro" className="btn btn-outline">
+                    {getText("Ver cómo ahorrás", "See how you save")}
+                  </a>
+                </div>
+                <p className="hero-subcta">
+                  {getText(
+                    "Primer contacto por WhatsApp · Respondemos en menos de 24 h",
+                    "First contact via WhatsApp · We reply within 24 h"
+                  )}
+                </p>
+                <div className="hero-tags">
+                  <span className="hero-tag">{Icons.home} {getText("Hogares", "Homes")}</span>
+                  <span className="hero-tag">{Icons.store} {getText("PyMEs", "Small businesses")}</span>
+                  <span className="hero-tag">{Icons.factory} {getText("Industrias", "Industry")}</span>
+                  <span className="hero-tag">{Icons.sprout} {getText("Productores", "Growers")}</span>
+                </div>
               </div>
-              <div className="hero-tags">
-                <span className="hero-tag">{Icons.cpu} {getText("Hardware IoT", "IoT Hardware")}</span>
-                <span className="hero-tag">{Icons.code} {getText("Software a Medida", "Custom Software")}</span>
-                <span className="hero-tag">{Icons.sparkles} {getText("Datos & IA", "Data & AI")}</span>
+
+              <div className="hero-visual" aria-hidden="true">
+                <div className="hero-photo">
+                  <img
+                    src={`${IMG}/prueba-riego-macetas.jpg`}
+                    alt=""
+                    width="1200"
+                    height="1600"
+                  />
+                </div>
+                <div className="phone-frame">
+                  <AppScreen t={getText} />
+                </div>
+                <div className="hero-float-card">
+                  <span className="hero-float-icon">{Icons.droplet}</span>
+                  <span>
+                    <strong>{getText("Humedad del suelo", "Soil moisture")}</strong>
+                    <small>64% · {getText("Óptimo", "Optimal")}</small>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -403,50 +691,124 @@ const App = () => {
           </div>
         </section>
 
-        {/* About Section */}
-        <section id="about" className="about">
+        {/* Audiences Section */}
+        <section id="soluciones" className="audiences">
           <div className="container">
-            <span className="section-tag">{getText("Quiénes Somos", "Who We Are")}</span>
-            <h2>{getText("Sobre Cat-Tech Future", "About Cat-Tech Future")}</h2>
+            <span className="section-tag">{getText("Para Quién", "Who It's For")}</span>
+            <h2>{getText("Soluciones para cada necesidad", "Solutions for every need")}</h2>
             <div className="section-line"></div>
-            <div className="about-content">
-              <p>{getText(
-                "Somos una empresa de desarrollo tecnológico especializada en crear soluciones integrales de hardware y software. Nacidos en Catamarca, prestamos servicios a empresas e instituciones en toda la región: Tucumán, Santiago del Estero, La Rioja y Córdoba. Nuestro equipo combina experiencia en ingeniería electrónica, desarrollo de software y ciencia de datos para transformar desafíos complejos en soluciones innovadoras y sustentables.",
-                "We are a technology development company specialized in creating comprehensive hardware and software solutions. Based in Catamarca, we serve businesses and institutions across the region: Tucumán, Santiago del Estero, La Rioja and Córdoba. Our team combines experience in electronic engineering, software development and data science to transform complex challenges into innovative and sustainable solutions."
-              )}</p>
-              <div className="about-grid">
-                <div className="about-card reveal">
-                  <div className="card-icon">{Icons.compass}</div>
-                  <h3>{getText("Nuestro Enfoque", "Our Approach")}</h3>
-                  <p>{getText(
-                    "Desarrollamos soluciones end-to-end que integran hardware IoT, software personalizado y análisis de datos para impulsar la transformación digital de tu negocio con un fuerte compromiso ambiental.",
-                    "We develop end-to-end solutions that integrate IoT hardware, custom software and data analysis to drive your business digital transformation with a strong environmental commitment."
-                  )}</p>
+            <p className="section-intro">
+              {getText(
+                "Desde tu casa hasta tu fábrica o tu campo: automatizamos lo que hoy hacés a mano y te damos el control desde el celular.",
+                "From your home to your plant or your farm: we automate what you do by hand today and put you in control from your phone."
+              )}
+            </p>
+            <div className="audience-grid">
+              {audiences.map((aud, i) => (
+                <article className="audience-card reveal" key={i} style={{ transitionDelay: `${i * 80}ms` }}>
+                  <div className="sector-icon">{aud.icon}</div>
+                  <h3>{getText(...aud.title)}</h3>
+                  <p className="audience-tagline">{getText(...aud.tagline)}</p>
+                  <ul className="check-list">
+                    {aud.items.map((item, j) => (
+                      <li key={j}>
+                        <span className="check-icon">{Icons.check}</span>
+                        {getText(...item)}
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href={waLink(getText(...aud.wa))}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="service-cta"
+                  >
+                    {getText("Consultar por WhatsApp", "Ask on WhatsApp")} →
+                  </a>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Savings Section */}
+        <section id="ahorro" className="savings">
+          <div className="container">
+            <span className="section-tag">{getText("Ahorro y Control", "Savings & Control")}</span>
+            <h2>{getText("Automatizar se paga solo", "Automation pays for itself")}</h2>
+            <div className="section-line"></div>
+            <p className="section-intro">
+              {getText(
+                "La mayoría de los sistemas funcionan \"a ciegas\": un reloj enciende el riego o la bomba aunque haya llovido, y para saber si algo falló hay que ir hasta el lugar. Automatizar con datos cambia eso.",
+                "Most systems run \"blind\": a timer turns on irrigation or the pump even after rain, and you have to go on site to find out if something failed. Automating with data changes that."
+              )}
+            </p>
+
+            <div className="savings-compare">
+              <div className="compare-col compare-before reveal">
+                <h3>{getText("Sin automatizar", "Without automation")}</h3>
+                <ul>
+                  <li><span className="compare-icon">{Icons.close}</span>{getText("Riego o bomba por horario fijo, llueva o no", "Irrigation or pump on a fixed schedule, rain or shine")}</li>
+                  <li><span className="compare-icon">{Icons.close}</span>{getText("Hay que ir al lugar para cambiar algo", "You have to go on site to change anything")}</li>
+                  <li><span className="compare-icon">{Icons.close}</span>{getText("Las fallas se descubren tarde", "Failures are discovered late")}</li>
+                  <li><span className="compare-icon">{Icons.close}</span>{getText("Sin datos de cuánto se consume", "No data on how much is consumed")}</li>
+                </ul>
+              </div>
+              <div className="compare-col compare-after reveal">
+                <h3>{getText("Con Cat-Tech Future", "With Cat-Tech Future")}</h3>
+                <ul>
+                  <li><span className="compare-icon">{Icons.check}</span>{getText("Funciona solo cuando hace falta, según sensores", "Runs only when needed, based on sensors")}</li>
+                  <li><span className="compare-icon">{Icons.check}</span>{getText("Control y configuración desde el celular", "Control and settings from your phone")}</li>
+                  <li><span className="compare-icon">{Icons.check}</span>{getText("Alertas al instante si algo sale de lo normal", "Instant alerts when something is off")}</li>
+                  <li><span className="compare-icon">{Icons.check}</span>{getText("Historial y reportes de consumo", "History and consumption reports")}</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="benefit-grid">
+              {benefits.map((b, i) => (
+                <div className="benefit-card reveal" key={i} style={{ transitionDelay: `${i * 80}ms` }}>
+                  <div className="card-icon">{b.icon}</div>
+                  <span className="benefit-figure">{getText(...b.figure)}</span>
+                  <h3>{getText(...b.title)}</h3>
+                  <p>{getText(...b.text)}</p>
                 </div>
-                <div className="about-card reveal">
-                  <div className="card-icon">{Icons.users}</div>
-                  <h3>{getText("Equipo Experto", "Expert Team")}</h3>
-                  <p>{getText(
-                    "Equipo especializados en desarrollo de hardware IoT, arquitectura de software, ciencia de datos e inteligencia artificial trabajando en conjunto para crear el futuro tecnológico del norte argentino.",
-                    "Engineers specialized in IoT hardware development, software architecture, data science and artificial intelligence working together to create the technological future of northern Argentina."
-                  )}</p>
+              ))}
+            </div>
+            <p className="savings-footnote">
+              {getText(
+                "* Estimaciones de nuestros análisis técnicos para sistemas de riego frente al riego por temporizador. El ahorro real depende de cada instalación; el recupero de la inversión estimado es de aproximadamente un año.",
+                "* Estimates from our technical analyses of irrigation systems compared with timer-based irrigation. Actual savings depend on each installation; estimated payback is about one year."
+              )}
+            </p>
+
+            <div className="control-block reveal">
+              <div className="control-block-media">
+                <div className="phone-frame phone-frame-static">
+                  <AppScreen
+                    t={getText}
+                    label={getText(
+                      "Pantalla de la plataforma de monitoreo con humedad del suelo y temperatura",
+                      "Monitoring platform screen showing soil moisture and temperature"
+                    )}
+                  />
                 </div>
-                <div className="about-card reveal">
-                  <div className="card-icon">{Icons.sparkles}</div>
-                  <h3>{getText("Innovación Continua", "Continuous Innovation")}</h3>
-                  <p>{getText(
-                    "Utilizamos las últimas tecnologías en automatización, control, machine learning e integración de LLMs para crear soluciones de vanguardia que impulsen el desarrollo regional.",
-                    "We use the latest technologies in automation, control, machine learning and LLM integration to create cutting-edge solutions that drive regional development."
-                  )}</p>
-                </div>
-                <div className="about-card reveal">
-                  <div className="card-icon">{Icons.shield}</div>
-                  <h3>{getText("Compromiso", "Commitment")}</h3>
-                  <p>{getText(
-                    "Nos comprometemos con la calidad, eficiencia, escalabilidad y sustentabilidad de cada proyecto, creando empleo tecnológico local para retener talento en la región.",
-                    "We are committed to the quality, efficiency, scalability and sustainability of each project, creating local tech jobs to retain talent in the region."
-                  )}</p>
-                </div>
+              </div>
+              <div className="control-block-text">
+                <span className="proposal-badge">{Icons.smartphone} {getText("Control en todo momento", "Control at all times")}</span>
+                <h3>{getText("Todo lo que pasa, en tu mano", "Everything that happens, in your hand")}</h3>
+                <p>{getText(
+                  "Nuestra plataforma muestra en tiempo real lo que miden tus sensores, guarda el historial y te avisa cuando algo necesita atención. Podés encender, apagar o ajustar tu sistema desde donde estés.",
+                  "Our platform shows what your sensors measure in real time, keeps the history and alerts you when something needs attention. You can switch on, off or adjust your system from wherever you are."
+                )}</p>
+                <ul className="check-list">
+                  <li><span className="check-icon">{Icons.check}</span>{getText("Lecturas en vivo: humedad, temperatura, consumo", "Live readings: moisture, temperature, consumption")}</li>
+                  <li><span className="check-icon">{Icons.check}</span>{getText("Promedios, rangos y tendencias de las últimas 24 h", "24 h averages, ranges and trends")}</li>
+                  <li><span className="check-icon">{Icons.check}</span>{getText("Varios sitios o invernaderos en una sola cuenta", "Several sites or greenhouses in one account")}</li>
+                </ul>
+                <a href={DEMO_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                  {getText("Probar la demo", "Try the demo")}
+                </a>
               </div>
             </div>
           </div>
@@ -460,15 +822,15 @@ const App = () => {
             <div className="section-line"></div>
             <p className="section-intro">
               {getText(
-                "Ofrecemos soluciones tecnológicas integrales que combinan hardware, software y análisis de datos para impulsar tu negocio.",
-                "We offer comprehensive technology solutions that combine hardware, software and data analysis to boost your business."
+                "Hacemos todo el sistema: el hardware, el software y el análisis de los datos. Un solo equipo responsable de que funcione.",
+                "We build the whole system: hardware, software and data analysis. One team responsible for making it work."
               )}
             </p>
             <p className="services-budget-notice">
-              <strong>{getText("Sin precios fijos:", "No fixed prices:")}</strong>{" "}
+              <strong>{getText("Presupuesto a medida:", "Tailored quote:")}</strong>{" "}
               {getText(
-                "Cada proyecto es único. Diseñamos la solución a medida de tu necesidad y te damos un presupuesto personalizado — sin compromiso.",
-                "Every project is unique. We design the solution tailored to your needs and provide a personalized quote — no commitment required."
+                "Cada proyecto es distinto. Después de la consulta técnica te entregamos un presupuesto detallado según tu necesidad, sin costos ocultos.",
+                "Every project is different. After the technical consultation we give you a detailed quote for your needs, with no hidden costs."
               )}
             </p>
             <div className="services-grid">
@@ -477,8 +839,16 @@ const App = () => {
                   <div className="card-icon">{service.icon}</div>
                   <h3>{getText(...service.title)}</h3>
                   <p>{getText(...service.text)}</p>
-                  <a href="#contact" className="service-cta">
-                    {getText("Consultar sin compromiso", "Ask without commitment")} →
+                  <a
+                    href={waLink(getText(
+                      `Hola, me interesa: ${service.title[0]}`,
+                      `Hi, I'm interested in: ${service.title[1]}`
+                    ))}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="service-cta"
+                  >
+                    {getText("Consultar por WhatsApp", "Ask on WhatsApp")} →
                   </a>
                 </article>
               ))}
@@ -486,96 +856,16 @@ const App = () => {
           </div>
         </section>
 
-        {/* Technologies Section */}
-        <section id="technologies" className="technologies">
+        {/* Projects Section */}
+        <section id="proyectos" className="portfolio">
           <div className="container">
-            <span className="section-tag">{getText("Nuestras Herramientas", "Our Tools")}</span>
-            <h2>{getText("Stack Tecnológico", "Technology Stack")}</h2>
+            <span className="section-tag">{getText("Lo Que Construimos", "What We Build")}</span>
+            <h2>{getText("Nuestro Trabajo", "Our Work")}</h2>
             <div className="section-line"></div>
             <p className="section-intro">
               {getText(
-                "Utilizamos tecnologías modernas y robustas para crear soluciones escalables y de alto rendimiento.",
-                "We use modern and robust technologies to create scalable and high-performance solutions."
-              )}
-            </p>
-
-            <div className="tech-grid">
-              <div className="tech-category reveal">
-                <h3>{getText("Hardware & Embebidos", "Hardware & Embedded")}</h3>
-                <div className="tech-list">
-                  <span className="tech-item">C/C++</span>
-                  <span className="tech-item">Raspberry Pi</span>
-                  <span className="tech-item">ESP32/ESP8266</span>
-                  <span className="tech-item">Sensores IoT</span>
-                </div>
-              </div>
-
-              <div className="tech-category reveal">
-                <h3>{getText("Desarrollo Backend", "Backend Development")}</h3>
-                <div className="tech-list">
-                  <span className="tech-item">Python</span>
-                  <span className="tech-item">Flask</span>
-                  <span className="tech-item">PostgreSQL</span>
-                  <span className="tech-item">TimescaleDB</span>
-                </div>
-              </div>
-
-              <div className="tech-category reveal">
-                <h3>{getText("Desarrollo Frontend", "Frontend Development")}</h3>
-                <div className="tech-list">
-                  <span className="tech-item">React</span>
-                  <span className="tech-item">JavaScript</span>
-                  <span className="tech-item">HTML/CSS</span>
-                  <span className="tech-item">Dashboards</span>
-                </div>
-              </div>
-
-              <div className="tech-category reveal">
-                <h3>{getText("IA & Machine Learning", "AI & Machine Learning")}</h3>
-                <div className="tech-list">
-                  <span className="tech-item">TensorFlow</span>
-                  <span className="tech-item">PyTorch</span>
-                  <span className="tech-item">LLM Integration</span>
-                  <span className="tech-item">Scikit-learn</span>
-                </div>
-              </div>
-
-              <div className="tech-category reveal">
-                <h3>{getText("Análisis de Datos", "Data Analysis")}</h3>
-                <div className="tech-list">
-                  <span className="tech-item">Pandas</span>
-                  <span className="tech-item">NumPy</span>
-                  <span className="tech-item">Plotly</span>
-                  <span className="tech-item">Matplotlib</span>
-                  <span className="tech-item">Seaborn</span>
-                  <span className="tech-item">Jupyter</span>
-                  <span className="tech-item">ETL Pipelines</span>
-                </div>
-              </div>
-
-              <div className="tech-category reveal">
-                <h3>{getText("DevOps & Tools", "DevOps & Tools")}</h3>
-                <div className="tech-list">
-                  <span className="tech-item">Docker</span>
-                  <span className="tech-item">Git</span>
-                  <span className="tech-item">REST APIs</span>
-                  <span className="tech-item">CI/CD</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Portfolio Section */}
-        <section id="portfolio" className="portfolio">
-          <div className="container">
-            <span className="section-tag">{getText("Casos de Éxito", "Success Stories")}</span>
-            <h2>{getText("Portfolio", "Portfolio")}</h2>
-            <div className="section-line"></div>
-            <p className="section-intro">
-              {getText(
-                "Casos de éxito que demuestran nuestras capacidades en desarrollo de soluciones tecnológicas integrales y sustentables.",
-                "Success cases that demonstrate our capabilities in developing comprehensive and sustainable technological solutions."
+                "Diseñamos, fabricamos y probamos nuestros propios sistemas. Esto es lo que ya tenemos funcionando.",
+                "We design, build and test our own systems. This is what we already have running."
               )}
             </p>
 
@@ -587,22 +877,28 @@ const App = () => {
                 tabIndex={0}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCropModal(); } }}
               >
-                <div className="project-image">{Icons.leaf}</div>
+                <div className="project-photo">
+                  <img
+                    src={`${IMG}/plantin-prueba.jpg`}
+                    alt={getText("Plantín de tomate de la prueba piloto", "Tomato seedling from the pilot")}
+                    width="960"
+                    height="1280"
+                    loading="lazy"
+                  />
+                  <span className="project-photo-badge">{getText("Prueba piloto propia", "In-house pilot")}</span>
+                </div>
                 <div className="project-content">
-                  <h3>{getText("Sistema Inteligente para Cultivos", "Smart Crop System")}</h3>
+                  <h3>{getText("Riego automático con sensores", "Sensor-driven automatic irrigation")}</h3>
                   <div className="card-line"></div>
                   <p>{getText(
-                    "Solución completa que integra hardware IoT con sensores de calidad industrial, software de monitoreo en tiempo real y análisis predictivo mediante IA para optimizar la producción agrícola. Actualmente en fase de pruebas con el MVP mejorado.",
-                    "Complete solution that integrates IoT hardware with industrial-quality sensors, real-time monitoring software and predictive analysis through AI to optimize agricultural production. Currently in testing phase with improved MVP."
+                    "Montamos una prueba piloto con plantines de tomate, riego por goteo, sensor de humedad y nuestro controlador ESP32 en gabinete para exterior. El sistema decide cuándo regar y envía las lecturas a la plataforma.",
+                    "We built a pilot with tomato seedlings, drip irrigation, a moisture sensor and our ESP32 controller in an outdoor enclosure. The system decides when to water and sends readings to the platform."
                   )}</p>
                   <div className="tech-tags">
                     <span className="tech-tag">ESP32</span>
                     <span className="tech-tag">C</span>
-                    <span className="tech-tag">Python</span>
-                    <span className="tech-tag">React</span>
-                    <span className="tech-tag">Sensores RS485</span>
-                    <span className="tech-tag">ML</span>
-                    <span className="tech-tag">PostgreSQL</span>
+                    <span className="tech-tag">{getText("Sensor de humedad", "Moisture sensor")}</span>
+                    <span className="tech-tag">{getText("Riego por goteo", "Drip irrigation")}</span>
                   </div>
                   <div className="click-hint">
                     {getText("Clic para ver más detalles →", "Click to see more details →")}
@@ -611,36 +907,183 @@ const App = () => {
               </article>
 
               <article className="project-card reveal">
-                <div className="project-image">{Icons.droplet}</div>
+                <div className="project-photo project-photo-top">
+                  <img
+                    src={`${IMG}/app-historial-graficos.jpg`}
+                    alt={getText(
+                      "Historial de mediciones con gráficos de caudal, humedad y temperatura",
+                      "Measurement history with flow, humidity and temperature charts"
+                    )}
+                    width="746"
+                    height="1390"
+                    loading="lazy"
+                  />
+                  <span className="project-photo-badge">{getText("Online", "Live")}</span>
+                </div>
                 <div className="project-content">
-                  <h3>{getText("Sistema de Riego Inteligente", "Smart Irrigation System")}</h3>
+                  <h3>{getText("Plataforma de monitoreo", "Monitoring platform")}</h3>
                   <div className="card-line"></div>
                   <p>{getText(
-                    "Sistema automatizado con sensores IoT y dashboard en tiempo real para gestión eficiente del agua en espacios públicos, reduciendo consumo hasta un 40%. Contribuye al cumplimiento de los ODS.",
-                    "Automated system with IoT sensors and real-time dashboard for efficient water management in public spaces, reducing consumption by up to 40%. Contributes to SDG compliance."
+                    "Nuestra aplicación web muestra en tiempo real humedad del suelo, temperatura, promedios, rangos y tendencias de cada sitio. Está online y conectada a la prueba piloto: podés entrar con un usuario de prueba.",
+                    "Our web app shows real-time soil moisture, temperature, averages, ranges and trends for each site. It's live and connected to the pilot: you can log in with a demo user."
                   )}</p>
-                  <div className="ods-badges">
-                    <div className="ods-badge">
-                      <span className="ods-number">6</span>
-                      <span className="ods-text">{getText("Agua limpia y saneamiento", "Clean water and sanitation")}</span>
-                    </div>
-                    <div className="ods-badge">
-                      <span className="ods-number">11</span>
-                      <span className="ods-text">{getText("Ciudades sostenibles", "Sustainable cities")}</span>
-                    </div>
-                    <div className="ods-badge">
-                      <span className="ods-number">13</span>
-                      <span className="ods-text">{getText("Acción por el clima", "Climate action")}</span>
-                    </div>
-                  </div>
                   <div className="tech-tags">
-                    <span className="tech-tag">ESP32</span>
                     <span className="tech-tag">Python</span>
-                    <span className="tech-tag">C</span>
-                    <span className="tech-tag">Sensores RS485</span>
+                    <span className="tech-tag">React</span>
+                    <span className="tech-tag">PostgreSQL</span>
+                    <span className="tech-tag">{getText("Tiempo real", "Real time")}</span>
                   </div>
+                  <a href={DEMO_URL} target="_blank" rel="noopener noreferrer" className="project-link">
+                    {getText("Ver demo en app.cattechfuture.com", "View demo at app.cattechfuture.com")} {Icons.external}
+                  </a>
                 </div>
               </article>
+            </div>
+
+            {/* Own hardware: controller board */}
+            <div className="hardware-block reveal">
+              <div className="hardware-viewer">
+                <button
+                  className="hardware-stage"
+                  onClick={() => openLightbox(pcbImages, pcbImages[pcbView])}
+                  aria-label={getText(
+                    `Ampliar: ${pcbImages[pcbView].caption[0]}`,
+                    `Enlarge: ${pcbImages[pcbView].caption[1]}`
+                  )}
+                >
+                  <img
+                    key={pcbImages[pcbView].src}
+                    src={pcbImages[pcbView].src}
+                    alt={getText(...pcbImages[pcbView].alt)}
+                    loading="lazy"
+                  />
+                  <span className="hardware-zoom" aria-hidden="true">{Icons.maximize}</span>
+                </button>
+                <div className="hardware-thumbs" role="tablist" aria-label={getText("Vistas de la placa", "Board views")}>
+                  {pcbImages.map((img, i) => (
+                    <button
+                      key={img.src}
+                      role="tab"
+                      aria-selected={pcbView === i}
+                      className={`hardware-thumb ${pcbView === i ? 'active' : ''}`}
+                      onClick={() => setPcbView(i)}
+                    >
+                      <img src={img.src} alt="" loading="lazy" />
+                      <span>{getText(...img.label)}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="hardware-text">
+                <span className="proposal-badge">{Icons.cpu} {getText("Hardware propio · v1.0", "In-house hardware · v1.0")}</span>
+                <h3>{getText("Nuestro controlador, diseñado desde cero", "Our controller, designed from scratch")}</h3>
+                <p>{getText(
+                  "Pasamos del prototipo cableado de la prueba piloto a una placa de circuito impreso propia, diseñada en KiCad. Nació para el riego, pero la misma base sirve para controlar bombas, monitorear equipos o automatizar procesos en hogares, comercios e industrias.",
+                  "We went from the pilot's hand-wired prototype to our own printed circuit board, designed in KiCad. It was born for irrigation, but the same base can control pumps, monitor equipment or automate processes in homes, shops and industry."
+                )}</p>
+                <ul className="hardware-specs">
+                  {pcbSpecs.map((spec, i) => (
+                    <li key={i}>
+                      <span className="hardware-spec-icon">{spec.icon}</span>
+                      <span>
+                        <strong>{getText(...spec.title)}</strong>
+                        {getText(...spec.text)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="tech-tags">
+                  <span className="tech-tag">ESP32</span>
+                  <span className="tech-tag">KiCad</span>
+                  <span className="tech-tag">TPS563201</span>
+                  <span className="tech-tag">12 V DC</span>
+                </div>
+                <a
+                  href={waLink(getText(
+                    "Hola, me interesa el desarrollo de hardware a medida",
+                    "Hi, I'm interested in custom hardware development"
+                  ))}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="service-cta"
+                >
+                  {getText("Consultar por hardware a medida", "Ask about custom hardware")} →
+                </a>
+              </div>
+            </div>
+
+            {/* Gallery */}
+            <div className="gallery">
+              <h3 className="gallery-title">{getText("Galería", "Gallery")}</h3>
+              <div className="gallery-filters" role="tablist" aria-label={getText("Filtrar galería", "Filter gallery")}>
+                {galleryCategories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    role="tab"
+                    aria-selected={galleryFilter === cat.id}
+                    className={`gallery-filter ${galleryFilter === cat.id ? 'active' : ''}`}
+                    onClick={() => setGalleryFilter(cat.id)}
+                  >
+                    {getText(...cat.label)}
+                  </button>
+                ))}
+              </div>
+              <div className="gallery-grid">
+                {galleryItems.map((item) => (
+                  item.src ? (
+                    <button
+                      key={item.src}
+                      className="gallery-item reveal"
+                      onClick={() => openLightbox(galleryPhotos, item)}
+                      aria-label={getText(`Ampliar: ${item.caption[0]}`, `Enlarge: ${item.caption[1]}`)}
+                    >
+                      <img src={item.src} alt={getText(...item.alt)} loading="lazy" />
+                      <span className="gallery-caption">{getText(...item.caption)}</span>
+                    </button>
+                  ) : (
+                    <div key={`${item.category}-${item.caption[0]}`} className="gallery-item gallery-placeholder reveal">
+                      <span className="gallery-placeholder-icon">{Icons.image}</span>
+                      <span className="gallery-placeholder-label">{getText("Próximamente", "Coming soon")}</span>
+                      <span className="gallery-caption">{getText(...item.caption)}</span>
+                    </div>
+                  )
+                ))}
+              </div>
+            </div>
+
+            {/* Designed solutions (technical proposals) */}
+            <div className="proposals">
+              <h3 className="gallery-title">{getText("Soluciones que diseñamos", "Solutions we've designed")}</h3>
+              <p className="section-intro">
+                {getText(
+                  "Propuestas técnicas completas que desarrollamos para clientes: arquitectura, componentes, lógica de funcionamiento y análisis de costo-beneficio.",
+                  "Complete technical proposals we developed for clients: architecture, components, operating logic and cost-benefit analysis."
+                )}
+              </p>
+              <div className="projects-grid">
+                {proposals.map((p, i) => (
+                  <article className="proposal-card reveal" key={i}>
+                    <span className="proposal-badge">{Icons.lightbulb} {getText("Propuesta técnica", "Technical proposal")}</span>
+                    <div className="proposal-head">
+                      <div className="card-icon">{p.icon}</div>
+                      <h3>{getText(...p.title)}</h3>
+                    </div>
+                    <p>{getText(...p.text)}</p>
+                    <ul className="check-list">
+                      {p.points.map((pt, j) => (
+                        <li key={j}>
+                          <span className="check-icon">{Icons.check}</span>
+                          {getText(...pt)}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="tech-tags">
+                      {p.tags.map((t) => <span className="tech-tag" key={t}>{t}</span>)}
+                    </div>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -650,57 +1093,28 @@ const App = () => {
           <div className="container">
             <div className="trust-banner-grid">
               <div className="trust-stat">
-                <span className="stat-number">2+</span>
+                <span className="stat-number">24/7</span>
                 <span className="stat-label">
-                  {getText("Proyectos IoT con hardware industrial", "IoT projects with industrial hardware")}
+                  {getText("Monitoreo y control desde el celular", "Monitoring and control from your phone")}
                 </span>
               </div>
               <div className="trust-stat">
-                <span className="stat-number">40%</span>
+                <span className="stat-number">30–40%</span>
                 <span className="stat-label">
-                  {getText("Reducción de consumo de agua en riego inteligente", "Water consumption reduction in smart irrigation")}
+                  {getText("Ahorro estimado de agua y energía en riego", "Estimated water and energy savings in irrigation")}
                 </span>
               </div>
               <div className="trust-stat">
                 <span className="stat-number">100%</span>
                 <span className="stat-label">
-                  {getText("Soluciones a medida del cliente", "100% custom client solutions")}
+                  {getText("Hardware y software hechos por nuestro equipo", "Hardware and software built by our team")}
                 </span>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Sectors Section */}
-        <section id="sectors" className="sectors">
-          <div className="container">
-            <span className="section-tag">{getText("A Quiénes Ayudamos", "Who We Help")}</span>
-            <h2>{getText("Sectores que Atendemos", "Sectors We Serve")}</h2>
-            <div className="section-line"></div>
-            <div className="sectors-grid">
-              <div className="sector-card reveal">
-                <div className="sector-icon">{Icons.wrench}</div>
-                <h3>{getText("Industria", "Industry")}</h3>
-                <p>{getText(
-                  "Automatización de procesos, control de calidad, monitoreo de producción y análisis predictivo para manufactura y producción industrial.",
-                  "Process automation, quality control, production monitoring and predictive analysis for manufacturing and industrial production."
-                )}</p>
-              </div>
-              <div className="sector-card reveal">
-                <div className="sector-icon">{Icons.cart}</div>
-                <h3>{getText("Retail & PyMEs", "Retail & SMEs")}</h3>
-                <p>{getText(
-                  "Sistemas de gestión, análisis de ventas, dashboards ejecutivos, automatización de inventarios y soluciones de e-commerce para pequeñas y medianas empresas.",
-                  "Management systems, sales analysis, executive dashboards, inventory automation and e-commerce solutions for small and medium enterprises."
-                )}</p>
-              </div>
-              <div className="sector-card reveal">
-                <div className="sector-icon">{Icons.landmark}</div>
-                <h3>{getText("Gobierno", "Government")}</h3>
-                <p>{getText(
-                  "Sistemas de monitoreo urbano, gestión de recursos públicos, análisis de datos para toma de decisiones y soluciones IoT para ciudades inteligentes.",
-                  "Urban monitoring systems, public resource management, data analysis for decision making and IoT solutions for smart cities."
-                )}</p>
+              <div className="trust-stat">
+                <span className="stat-number">24 h</span>
+                <span className="stat-label">
+                  {getText("Tiempo de respuesta por WhatsApp", "WhatsApp response time")}
+                </span>
               </div>
             </div>
           </div>
@@ -710,99 +1124,95 @@ const App = () => {
         <section id="process" className="process">
           <div className="container">
             <span className="section-tag">{getText("Cómo Trabajamos", "How We Work")}</span>
-            <h2>{getText("Nuestro Proceso de Trabajo", "Our Work Process")}</h2>
+            <h2>{getText("De la idea a tu sistema funcionando", "From idea to a working system")}</h2>
             <div className="section-line"></div>
             <div className="process-grid">
               <div className="process-step reveal">
                 <div className="step-number">01</div>
-                <h3>{getText("Análisis y Consultoría", "Analysis & Consulting")}</h3>
+                <h3>{getText("Primer contacto", "First contact")}</h3>
                 <p>{getText(
-                  "Entendemos tus necesidades y desafíos. Realizamos un análisis profundo para diseñar la solución óptima.",
-                  "We understand your needs and challenges. We perform a deep analysis to design the optimal solution."
+                  "Nos escribís por WhatsApp y nos contás brevemente qué necesitás. Te orientamos sin cargo.",
+                  "You message us on WhatsApp and briefly tell us what you need. We point you in the right direction at no charge."
                 )}</p>
               </div>
               <div className="process-step reveal">
                 <div className="step-number">02</div>
-                <h3>{getText("Diseño y Arquitectura", "Design & Architecture")}</h3>
+                <h3>{getText("Consulta técnica", "Technical consultation")}</h3>
                 <p>{getText(
-                  "Diseñamos la arquitectura completa de hardware y software, seleccionando las mejores tecnologías para tu proyecto.",
-                  "We design the complete hardware and software architecture, selecting the best technologies for your project."
+                  "Relevamos tu instalación y analizamos dónde se puede ahorrar y qué conviene automatizar. Es un servicio arancelado.",
+                  "We survey your site and analyze where you can save and what's worth automating. This is a paid service."
                 )}</p>
               </div>
               <div className="process-step reveal">
                 <div className="step-number">03</div>
-                <h3>{getText("Desarrollo e Implementación", "Development & Implementation")}</h3>
+                <h3>{getText("Diseño y presupuesto", "Design & quote")}</h3>
                 <p>{getText(
-                  "Desarrollamos la solución con metodologías ágiles, manteniendo comunicación constante y entregas incrementales.",
-                  "We develop the solution with agile methodologies, maintaining constant communication and incremental deliveries."
+                  "Te presentamos la solución, los componentes, el ahorro estimado y un presupuesto detallado.",
+                  "We present the solution, components, estimated savings and a detailed quote."
                 )}</p>
               </div>
               <div className="process-step reveal">
                 <div className="step-number">04</div>
-                <h3>{getText("Despliegue y Capacitación", "Deployment & Training")}</h3>
+                <h3>{getText("Instalación y capacitación", "Installation & training")}</h3>
                 <p>{getText(
-                  "Implementamos la solución en producción y capacitamos a tu equipo para su operación y mantenimiento.",
-                  "We implement the solution in production and train your team for its operation and maintenance."
+                  "Armamos, programamos e instalamos el sistema, y te enseñamos a usarlo desde el celular.",
+                  "We build, program and install the system, and teach you to use it from your phone."
                 )}</p>
               </div>
               <div className="process-step reveal">
                 <div className="step-number">05</div>
-                <h3>{getText("Soporte Continuo", "Continuous Support")}</h3>
+                <h3>{getText("Soporte continuo", "Ongoing support")}</h3>
                 <p>{getText(
-                  "Brindamos soporte técnico, actualizaciones y mejoras continuas para asegurar el éxito a largo plazo.",
-                  "We provide technical support, updates and continuous improvements to ensure long-term success."
+                  "Garantía, soporte remoto y planes de monitoreo y mantenimiento para que funcione siempre.",
+                  "Warranty, remote support and monitoring and maintenance plans to keep it running."
                 )}</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Vision Section */}
-        <section id="vision" className="vision">
+        {/* About Section */}
+        <section id="about" className="about">
           <div className="container">
-            <span className="section-tag">{getText("Hacia Dónde Vamos", "Where We're Going")}</span>
-            <h2>{getText("Nuestra Visión", "Our Vision")}</h2>
+            <span className="section-tag">{getText("Quiénes Somos", "Who We Are")}</span>
+            <h2>{getText("Sobre Cat-Tech Future", "About Cat-Tech Future")}</h2>
             <div className="section-line"></div>
-            <div className="vision-content">
-              <div className="vision-main reveal">
-                <h3>{getText("Modernización Tecnológica del Norte Argentino", "Technological Modernization of Northern Argentina")}</h3>
+            <div className="about-content">
+              <p>{getText(
+                "Somos un equipo de Catamarca que combina ingeniería electrónica, desarrollo de software y ciencia de datos. Diseñamos nuestras propias placas, programamos los equipos y desarrollamos las aplicaciones: por eso podemos ofrecer soluciones a medida y hacernos cargo de que funcionen. Trabajamos en Catamarca, Tucumán, Santiago del Estero, La Rioja y Córdoba, con el objetivo de acercar tecnología de nivel global al norte argentino y generar empleo tecnológico en la región.",
+                "We're a team from Catamarca combining electronic engineering, software development and data science. We design our own boards, program the devices and build the applications — which is why we can offer tailored solutions and take responsibility for making them work. We operate in Catamarca, Tucumán, Santiago del Estero, La Rioja and Córdoba, aiming to bring world-class technology to northern Argentina and create tech jobs in the region."
+              )}</p>
+            </div>
+            <div className="vision-grid">
+              <div className="vision-card reveal">
+                <div className="vision-card-icon">{Icons.mapPin}</div>
+                <h4>{getText("Impacto Regional", "Regional Impact")}</h4>
                 <p>{getText(
-                  "Nuestra misión es transformar el norte argentino en un polo de innovación tecnológica. Creemos que la tecnología global debe estar al alcance de todos, sin importar la ubicación geográfica. El norte argentino se destaca por su gran potencial pero sufre de baja adopción tecnológica y escasas oportunidades de empleo en el sector tech, lo que obliga a muchos ingenieros y profesionales a abandonar la región para poder trabajar en su especialidad.",
-                  "Our mission is to transform northern Argentina into a technological innovation hub. We believe that global technology should be accessible to everyone, regardless of geographic location. Northern Argentina stands out for its great potential but suffers from low technology adoption and scarce employment opportunities in the tech sector, forcing many engineers and professionals to leave the region to work in their specialty."
-                )}</p>
-                <p>{getText(
-                  "Queremos cambiar esta realidad. Desarrollamos tecnología global para desafíos locales, demostrando que desde Catamarca podemos crear soluciones de clase mundial. Nuestro objetivo es generar empleo tecnológico local, retener talento en la región y demostrar que la innovación no tiene fronteras geográficas.",
-                  "We want to change this reality. We develop global technology for local challenges, demonstrating that from Catamarca we can create world-class solutions. Our goal is to generate local tech employment, retain talent in the region and demonstrate that innovation has no geographic boundaries."
+                  "Crear oportunidades de empleo tecnológico en el norte argentino y retener talento local en la región.",
+                  "Create tech job opportunities in northern Argentina and retain local talent in the region."
                 )}</p>
               </div>
-
-              <div className="vision-grid">
-                <div className="vision-card reveal">
-                  <div className="vision-card-icon">{Icons.mapPin}</div>
-                  <h4>{getText("Impacto Regional", "Regional Impact")}</h4>
-                  <p>{getText(
-                    "Crear oportunidades de empleo tecnológico en Catamarca y expandir soluciones hacia Tucumán, Santiago del Estero, La Rioja y Córdoba, reteniendo talento local en la región.",
-                    "Create technological employment opportunities in Catamarca and expand solutions to Tucumán, Santiago del Estero, La Rioja and Córdoba, retaining local talent in the region."
-                  )}</p>
-                </div>
-
-                <div className="vision-card reveal">
-                  <div className="vision-card-icon">{Icons.leaf}</div>
-                  <h4>{getText("Sustentabilidad", "Sustainability")}</h4>
-                  <p>{getText(
-                    "Todas nuestras soluciones están diseñadas con un fuerte compromiso ambiental, contribuyendo activamente al cumplimiento de los Objetivos de Desarrollo Sostenible (ODS).",
-                    "All our solutions are designed with a strong environmental commitment, actively contributing to the fulfillment of the Sustainable Development Goals (SDGs)."
-                  )}</p>
-                </div>
-
-                <div className="vision-card reveal">
-                  <div className="vision-card-icon">{Icons.globe}</div>
-                  <h4>{getText("Innovación sin Fronteras", "Innovation without Borders")}</h4>
-                  <p>{getText(
-                    "Demostramos que la ubicación geográfica no limita la capacidad de innovar. Desarrollamos soluciones de nivel global desde el corazón del norte argentino.",
-                    "We demonstrate that geographic location does not limit the ability to innovate. We develop global-level solutions from the heart of northern Argentina."
-                  )}</p>
-                </div>
+              <div className="vision-card reveal">
+                <div className="vision-card-icon">{Icons.leaf}</div>
+                <h4>{getText("Sustentabilidad", "Sustainability")}</h4>
+                <p>{getText(
+                  "Nuestras soluciones buscan usar menos agua y energía, contribuyendo a los Objetivos de Desarrollo Sostenible (ODS 6, 11 y 13).",
+                  "Our solutions aim to use less water and energy, contributing to the Sustainable Development Goals (SDGs 6, 11 and 13)."
+                )}</p>
+              </div>
+              <div className="vision-card reveal">
+                <div className="vision-card-icon">{Icons.globe}</div>
+                <h4>{getText("Innovación sin Fronteras", "Innovation without Borders")}</h4>
+                <p>{getText(
+                  "La ubicación no limita la capacidad de innovar: desarrollamos soluciones de nivel global desde el corazón del norte argentino.",
+                  "Location doesn't limit innovation: we build world-class solutions from the heart of northern Argentina."
+                )}</p>
+              </div>
+            </div>
+            <div className="tech-strip reveal">
+              <span className="tech-strip-label">{getText("Tecnologías que usamos", "Technologies we use")}</span>
+              <div className="tech-list">
+                {techStack.map((t) => <span className="tech-item" key={t}>{t}</span>)}
               </div>
             </div>
           </div>
@@ -816,8 +1226,8 @@ const App = () => {
             <div className="section-line"></div>
             <p className="section-intro">
               {getText(
-                "Las dudas más comunes antes de empezar un proyecto tecnológico con nosotros.",
-                "The most common questions before starting a technology project with us."
+                "Las dudas más comunes antes de automatizar con nosotros.",
+                "The most common questions before automating with us."
               )}
             </p>
             <div className="faq-list">
@@ -842,23 +1252,23 @@ const App = () => {
             <div className="section-line"></div>
             <p className="section-intro">
               {getText(
-                "Sin burocracia, sin compromiso. Contanos tu idea y te respondemos en menos de 24 horas.",
-                "No bureaucracy, no commitment. Tell us your idea and we'll respond within 24 hours."
+                "Contanos brevemente qué necesitás por WhatsApp. Si tu caso requiere un relevamiento o análisis, coordinamos una consulta técnica arancelada.",
+                "Briefly tell us what you need on WhatsApp. If your case requires a survey or analysis, we'll schedule a paid technical consultation."
               )}
             </p>
 
             {/* Proceso de contacto */}
             <div className="contact-process">
               <div className="contact-process-step">
-                {getText("Contanos tu proyecto", "Tell us your project")}
+                {getText("Escribinos por WhatsApp", "Message us on WhatsApp")}
               </div>
               <span className="contact-process-arrow">→</span>
               <div className="contact-process-step">
-                {getText("Consulta gratuita", "Free consultation")}
+                {getText("Consulta técnica", "Technical consultation")}
               </div>
               <span className="contact-process-arrow">→</span>
               <div className="contact-process-step">
-                {getText("Diseñamos tu solución", "We design your solution")}
+                {getText("Tu solución a medida", "Your tailored solution")}
               </div>
             </div>
 
@@ -870,11 +1280,11 @@ const App = () => {
               </div>
               <div className="contact-trust-item">
                 <span className="trust-icon">{Icons.check}</span>
-                <p>{getText("Presupuesto personalizado, sin costos ocultos", "Custom quote, no hidden costs")}</p>
+                <p>{getText("Presupuesto detallado, sin costos ocultos", "Detailed quote, no hidden costs")}</p>
               </div>
               <div className="contact-trust-item">
                 <span className="trust-icon">{Icons.check}</span>
-                <p>{getText("Acompañamiento desde la idea hasta la implementación", "Support from idea to implementation")}</p>
+                <p>{getText("Acompañamiento desde la idea hasta la instalación", "Support from idea to installation")}</p>
               </div>
             </div>
 
@@ -935,10 +1345,10 @@ const App = () => {
               <span>Cat-Tech Future</span>
             </div>
             <div className="footer-links">
-              <a href="#about">{getText("Sobre Nosotros", "About Us")}</a>
-              <a href="#services">{getText("Servicios", "Services")}</a>
-              <a href="#technologies">{getText("Tecnologías", "Technologies")}</a>
-              <a href="#portfolio">{getText("Portfolio", "Portfolio")}</a>
+              {navItems.map((item) => (
+                <a key={item.href} href={item.href}>{getText(...item.label)}</a>
+              ))}
+              <a href="#about">{getText("Nosotros", "About")}</a>
               <a href="#contact">{getText("Contacto", "Contact")}</a>
             </div>
           </div>
@@ -967,6 +1377,40 @@ const App = () => {
         </button>
       )}
 
+      {/* Gallery Lightbox */}
+      {lightbox && lightbox.items[lightbox.index] && (
+        <div className="modal-overlay lightbox" onClick={() => setLightbox(null)}>
+          <figure className="lightbox-figure" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setLightbox(null)} aria-label={getText("Cerrar", "Close")}>
+              {Icons.close}
+            </button>
+            <img
+              src={lightbox.items[lightbox.index].src}
+              alt={getText(...lightbox.items[lightbox.index].alt)}
+            />
+            <figcaption>{getText(...lightbox.items[lightbox.index].caption)}</figcaption>
+            {lightbox.items.length > 1 && (
+              <>
+                <button
+                  className="lightbox-nav lightbox-prev"
+                  onClick={() => stepLightbox(-1)}
+                  aria-label={getText("Anterior", "Previous")}
+                >
+                  {Icons.chevronLeft}
+                </button>
+                <button
+                  className="lightbox-nav lightbox-next"
+                  onClick={() => stepLightbox(1)}
+                  aria-label={getText("Siguiente", "Next")}
+                >
+                  {Icons.chevronRight}
+                </button>
+              </>
+            )}
+          </figure>
+        </div>
+      )}
+
       {/* Crop System Modal */}
       {showCropModal && (
         <div className="modal-overlay" onClick={closeCropModal}>
@@ -984,16 +1428,16 @@ const App = () => {
               <div className="modal-section">
                 <h3>{getText("Descripción del Producto", "Product Description")}</h3>
                 <p>{getText(
-                  "Nuestro Sistema Inteligente para Cultivos es una solución integral que combina hardware IoT de calidad industrial con software avanzado de monitoreo y análisis predictivo mediante inteligencia artificial. El sistema permite optimizar la producción agrícola mediante el control automatizado de las condiciones ambientales críticas para el desarrollo de los cultivos.",
-                  "Our Smart Crop System is a comprehensive solution that combines industrial-quality IoT hardware with advanced monitoring software and predictive analysis through artificial intelligence. The system allows optimizing agricultural production through automated control of critical environmental conditions for crop development."
+                  "Nuestro Sistema Inteligente para Cultivos combina un controlador IoT diseñado por nosotros, sensores de suelo y ambiente, y una plataforma web de monitoreo. Riega según la humedad real del suelo y te muestra en tiempo real qué pasa con tu cultivo, desde el celular.",
+                  "Our Smart Crop System combines a controller we designed ourselves, soil and environment sensors, and a web monitoring platform. It irrigates based on actual soil moisture and shows you in real time what's happening with your crop, from your phone."
                 )}</p>
               </div>
 
               <div className="modal-section">
-                <h3>{getText("Estado Actual del MVP", "Current MVP Status")}</h3>
+                <h3>{getText("Estado Actual", "Current Status")}</h3>
                 <p>{getText(
-                  "Hemos mejorado significativamente nuestro MVP incorporando sensores de calidad industrial para garantizar la precisión y confiabilidad de los datos recopilados. Las pruebas del sistema mejorado están programadas para comenzar próximamente, junto con el diseño de modelos de optimización mediante IA que permitirán decisiones más inteligentes y automatizadas.",
-                  "We have significantly improved our MVP by incorporating industrial-quality sensors to ensure the accuracy and reliability of collected data. Testing of the improved system is scheduled to begin soon, along with the design of optimization models through AI that will enable smarter and more automated decisions."
+                  "Validamos el sistema en una prueba piloto propia con plantines de tomate, riego por goteo, sensor de humedad y nuestro controlador ESP32 en gabinete para exterior. Las lecturas se ven en tiempo real en app.cattechfuture.com. El próximo paso es incorporar sensores de calidad industrial (RS-485) y modelos de IA para optimizar el riego.",
+                  "We validated the system in our own pilot with tomato seedlings, drip irrigation, a moisture sensor and our ESP32 controller in an outdoor enclosure. Readings are visible in real time at app.cattechfuture.com. The next step is adding industrial-grade sensors (RS-485) and AI models to optimize irrigation."
                 )}</p>
               </div>
 
@@ -1014,7 +1458,6 @@ const App = () => {
                 <ul className="benefits-list">
                   <li>{getText("Descuentos especiales en la adquisición del sistema", "Special discounts on system acquisition")}</li>
                   <li>{getText("Actualizaciones gratuitas de software y firmware", "Free software and firmware updates")}</li>
-                  <li>{getText("Período de prueba del servicio y producto sin costo", "Free service and product trial period")}</li>
                   <li>{getText("Soporte técnico prioritario", "Priority technical support")}</li>
                   <li>{getText("Participación en el desarrollo de nuevas funcionalidades", "Participation in new feature development")}</li>
                 </ul>
@@ -1022,7 +1465,7 @@ const App = () => {
 
               <div className="modal-actions">
                 <a
-                  href="https://app.cattechfuture.com"
+                  href={DEMO_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-primary btn-large"
@@ -1043,8 +1486,8 @@ const App = () => {
               <div className="demo-info">
                 <p className="demo-note">
                   {getText(
-                    "* La demo incluye un usuario de prueba para que puedas explorar todas las funcionalidades del sistema: visualización de datos en tiempo real, historial de métricas y recomendaciones inteligentes basadas en IA.",
-                    "* The demo includes a test user so you can explore all system functionalities: real-time data visualization, metrics history and AI-based intelligent recommendations."
+                    "* La demo incluye un usuario de prueba para que puedas explorar la plataforma: visualización de datos en tiempo real, historial de métricas y estado de cada sitio.",
+                    "* The demo includes a test user so you can explore the platform: real-time data visualization, metrics history and the status of each site."
                   )}
                 </p>
               </div>
