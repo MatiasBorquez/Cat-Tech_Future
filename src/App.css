@@ -359,6 +359,28 @@ section {
   display: none;
 }
 
+.nav-links a.nav-blog {
+  color: var(--primary);
+  padding: calc(0.5rem - 1px) calc(1.25rem - 1px);
+  border: 1px solid var(--primary);
+  border-radius: 0.55rem;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-links a.nav-blog:hover {
+  background: var(--primary-soft);
+  transform: translateY(-2px);
+}
+
+.nav-links a.nav-blog::after {
+  display: none;
+}
+
+[data-theme="dark"] .nav-links a.nav-blog {
+  color: var(--primary-light);
+  border-color: var(--primary-light);
+}
+
 .menu-toggle {
   display: none;
   background: none;

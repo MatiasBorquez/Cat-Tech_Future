@@ -136,6 +136,7 @@ const Icons = {
 };
 
 const WA_NUMBER = "543834324087";
+const BLOG_URL = "https://blog.cattechfuture.com";
 const waLink = (text) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
 const DEMO_URL = "https://app.cattechfuture.com";
 const IMG = "/images/proyectos";
@@ -600,6 +601,9 @@ const App = () => {
                     {getText(...item.label)}
                   </a>
                 ))}
+                <a href={BLOG_URL} className="nav-blog" onClick={() => setMobileMenuOpen(false)}>
+                  {getText("Blog", "Blog")}
+                </a>
                 <a href="#contact" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>
                   {getText("Contacto", "Contact")}
                 </a>
@@ -1349,6 +1353,7 @@ const App = () => {
                 <a key={item.href} href={item.href}>{getText(...item.label)}</a>
               ))}
               <a href="#about">{getText("Nosotros", "About")}</a>
+              <a href={BLOG_URL}>{getText("Blog", "Blog")}</a>
               <a href="#contact">{getText("Contacto", "Contact")}</a>
             </div>
           </div>
